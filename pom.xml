@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.maty</groupId>
+	<artifactId>maty-project</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Maty Chen : Project</name>
+
+	<description>It contain Maty Chen's Project</description>
+	<url>https://github.com/cxjava/maty-project</url>
+
+	<modules>
+		<module>j2ee-parent</module>
+		<module>j2ee-parent/j2ee-common</module>
+		<module>j2ee-parent/j2ee-extjs</module>
+	</modules>
+
+	<developers>
+		<developer>
+			<id>maty</id>
+			<name>Maty Chen</name>
+			<email>cxjava at gmail.com</email>
+			<organization>T-Systems</organization>
+			<roles>
+				<role>Senior Java Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
+
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/cxjava/maty-project/issues</url>
+	</issueManagement>
+</project>
