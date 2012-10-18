@@ -7,4 +7,352 @@
   </parent>
   <artifactId>j2ee-common</artifactId>
   <packaging>war</packaging>
+  
+  <properties>
+		<java.version>1.6</java.version>
+		<spring.version>3.1.2.RELEASE</spring.version>
+		<slf4j.version>1.6.3</slf4j.version>
+		<logback.version>1.0.3</logback.version>
+		<aspectj.version>1.6.11</aspectj.version>
+		<jackson.version>2.0.2</jackson.version>
+		<mybatis-spring.version>1.1.1</mybatis-spring.version>
+		<proxool.version>0.9.1</proxool.version>
+		<bonecp.version>0.7.1.RELEASE</bonecp.version>
+		<shiro.version>1.2.0</shiro.version>
+		<hibernate-validator>4.3.0.Final</hibernate-validator>
+	</properties>
+  
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>copy-config</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>test</phase>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/test/resources</directory>
+									<includes>
+										<include>uglify/*</include>
+										<include>uglify/lib/*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution><!-- 打包之前做 -->
+						<phase>prepare-package</phase>  
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="开始用uglifyjs压缩 JSP 文件. 请耐心等待！" />
+								<property name="uglifyjs" value="${project.build.directory}/uglify/uglifyjs" />
+								<property name="jsp.compress.out.directory" value="${project.build.directory}/${project.build.finalName}/WEB-INF" />
+								<property name="jsp.compress.directory" value="src/main/webapp/WEB-INF" />
+								<apply executable="node" parallel="false" failonerror="true" dest="${jsp.compress.directory}">
+									<fileset dir="${jsp.compress.directory}" includes="**/*.jsp" />
+									<arg line=" ${uglifyjs}" />
+									<arg line=" --ascii" />
+									<arg line=" -o" />
+									<targetfile />
+									<srcfile />
+									<mapper type="regexp" from="^(.*)\.(jsp)$" to="\1-min.\2" />
+								</apply>
+								<move todir="${jsp.compress.out.directory}">
+									<fileset dir="${jsp.compress.directory}" includes="**/*-min.jsp" />
+									<mapper type="regexp" from="^(.*)-min\.(jsp)$" to="\1.\2" />
+								</move>
+								<echo message="成功用uglifyjs压缩 JSP 文件" />
+								
+								<echo message="开始用uglifyjs压缩 JS 文件. 请耐心等待！" />
+								<property name="uglifyjs" value="${project.build.directory}/uglify/uglifyjs" />
+								<property name="js.compress.out.directory" value="${project.build.directory}/${project.build.finalName}/resources/js" />
+								<property name="js.compress.directory" value="src/main/webapp/resources/js" />
+								<apply executable="node" parallel="false" failonerror="true" dest="${js.compress.directory}">
+									<fileset dir="${js.compress.directory}" includes="**/*.js" />
+									<arg line=" ${uglifyjs}" />
+									<arg line=" --ascii" />
+									<arg line=" -o" />
+									<targetfile />
+									<srcfile />
+									<mapper type="regexp" from="^(.*)\.(js)$" to="\1-min.\2" />
+								</apply>
+								<move todir="${js.compress.out.directory}">
+									<fileset dir="${js.compress.directory}" includes="**/*-min.js" />
+									<mapper type="regexp" from="^(.*)-min\.(js)$" to="\1.\2" />
+								</move>
+								<echo message="成功用uglifyjs压缩 JS 文件" />
+								
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.4.v20120524</version>
+			</plugin>
+			<plugin>
+				<!-- 编译插件 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- 打war包插件 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+				<!-- 声明：packagingExcludes中的*.properties文件均位于src/main/resources目录中 warSourceExcludes中的?test/*,venue/**位于src/main/webapp目录中 -->
+					<warSourceExcludes>resources/js/**/*.js,WEB-INF/**/*.jsp</warSourceExcludes>
+					<archive>
+						<!-- 不把maven的依赖加入 -->
+						<addMavenDescriptor>false</addMavenDescriptor>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- tomcat插件 -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<!-- 用户名和密码 -->
+					<username>admin</username>
+					<password>admin</password>
+					<port>8081</port>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- 运行mvn test时执行测试的插件 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12</version>
+				<configuration>
+					<argLine>-Dfile.encoding=UTF-8 -Djava.net.preferIPv4Stack=true</argLine>
+					<excludes>
+						<!-- 不包含 -->
+						<exclude>**${file.separator}ControllerTest.java</exclude>
+						<exclude>**${file.separator}ServicesTest.java</exclude>
+					</excludes>
+					<!-- 忽略单元测试失败 -->
+					<!-- <testFailureIgnore>true</testFailureIgnore> -->
+					<!-- 跳过单元测试 -->
+					<!-- <skip>true</skip> -->
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- web -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		<!-- spring -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+		<!-- json -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<!-- log4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<!-- mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.caches</groupId>
+			<artifactId>mybatis-ehcache</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+		</dependency>
+		<!-- commons -->
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<!-- jdbc driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.20</version>
+		</dependency>
+		<!-- jdbc pools -->
+		<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp-spring</artifactId>
+			<version>${bonecp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>${bonecp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>proxool</groupId>
+			<artifactId>proxool</artifactId>
+			<version>${proxool.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>proxool</groupId>
+			<artifactId>proxool-cglib</artifactId>
+			<version>${proxool.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>0.2.2</version>
+		</dependency>
+		<!-- SECURITY begin -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+		</dependency>
+		<!-- SECURITY end -->
+		<dependency>
+			<groupId>opensymphony</groupId>
+			<artifactId>sitemesh</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-core</artifactId>
+		</dependency>
+	</dependencies>
+	
 </project>

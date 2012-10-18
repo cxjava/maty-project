@@ -1,0 +1,1 @@
+function _fnAjaxParameters( oSettings ) 这个函数修改了返回服务端的参数值，以前是稀烂的数组。

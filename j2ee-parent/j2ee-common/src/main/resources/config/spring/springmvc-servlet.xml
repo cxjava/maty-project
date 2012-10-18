@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!-- 只搜索@Controller 标注的类 不搜索其他标注的类 -->
+	<context:component-scan base-package="com.maty.j2ee" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- controller层的属性和配置文件读入 ,多个用逗号隔开 <context:property-placeholder location="classpath:/config/others/config.properties" /> -->
+	<context:property-placeholder location="classpath:/config/mybatis/jdbc.properties,
+											classpath:/config/others/config.properties" />
+
+	<!-- 激活 @Required @Autowired,JSR 250's @PostConstruct, @PreDestroy and @Resource 等标注 -->
+	<context:annotation-config />
+
+	<!-- 对某些静态资源，如css,图片等进行过滤 ,有引用 "/resources/**" 的路径引用转到工程的/resources/目录取资源 -->
+	<!-- <mvc:resources mapping="/favicon.ico" location="/resources/images/favicon.ico"/> -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+	<!-- 简单的地址映射 -->
+	<!-- 定义首页 -->
+	<mvc:view-controller path="/" view-name="redirect:/home"/>
+	
+	<mvc:annotation-driven>
+ 		<mvc:message-converters>
+			<bean id="jsonConverter" class="com.maty.j2ee.common.jackson.MappingJackson2HttpMessageConverter"/>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<mvc:default-servlet-handler/>
+	
+	<!-- 支持 Shiro对Controller的方法级AOP安全控制 begin-->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    	<property name="securityManager" ref="securityManager"/>
+	</bean>
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+        <property name="exceptionMappings">  
+            <props>  
+                <prop key="org.apache.shiro.authz.UnauthorizedException">error/403</prop>  
+            </props>  
+        </property>  
+    </bean>  
+	<!-- end -->
+	
+	<!-- jsp视图 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 国际化,并且可以批定文件编码,可以使用classpath: 或者WEB-INF/ 前缀 -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/config/others/messages</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="cacheSeconds" value="60" />
+	</bean>
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+
+	<!-- 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 解析request的编码 ，Default is ISO-8859-1 -->
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- 设置最大允许的大小(字节)。-1表示没有限制(默认) 1024*1024*10=10MB -->
+		<property name="maxUploadSize" value="1048576000" />
+		<!--被允许的最大的内存的大小，Default is 10240 bytes -->
+		<property name="maxInMemorySize" value="20480" />
+		<!-- 一个类似懒加载的属性.可以定义该属性.让解析文件的时候再抛异常,然后Controller中定义异常处理的方法 -->
+		<property name="resolveLazily" value="true" />
+	</bean>
+</beans>
