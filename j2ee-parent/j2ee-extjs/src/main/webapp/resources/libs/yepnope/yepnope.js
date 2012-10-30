@@ -45,6 +45,11 @@ var docElement            = doc.documentElement,
     isFunction            = function ( fn ) {
       return toString.call( fn ) == "[object Function]";
     },
+    readFirstScript       = function() {
+        if (!firstScript || !firstScript.parentNode) {
+            firstScript = doc.getElementsByTagName( "script" )[ 0 ];
+        }
+    },
     globalFilters         = [],
     scriptCache           = {},
     prefixes              = {
@@ -69,6 +74,7 @@ var docElement            = doc.documentElement,
   // Takes a preloaded js obj (changes in different browsers) and injects it into the head
   // in the appropriate order
   function injectJs ( src, cb, attrs, timeout, /* internal use */ err, internal ) {
+	  
     var script = doc.createElement( "script" ),
         done, i;
 
@@ -109,6 +115,7 @@ var docElement            = doc.documentElement,
     // Inject script into to document
     // or immediately callback if we know there
     // was previously a timeout error
+    readFirstScript();
     err ? script.onload() : firstScript.parentNode.insertBefore( script, firstScript );
   }
 
@@ -134,6 +141,7 @@ var docElement            = doc.documentElement,
     }
 
     if ( ! err ) {
+      readFirstScript();
       firstScript.parentNode.insertBefore( link, firstScript );
       sTimeout(cb, 0);
     }
@@ -198,8 +206,6 @@ var docElement            = doc.documentElement,
 
         ! started && executeStack();
 
-        // Handle memory leak in IE
-        preloadElem.onload = preloadElem.onreadystatechange = null;
         if ( first ) {
           if ( elem != "img" ) {
             sTimeout(function(){ insBeforeObj.removeChild( preloadElem ) }, 50);
@@ -210,6 +216,9 @@ var docElement            = doc.documentElement,
               scriptCache[ url ][ i ].onload();
             }
           }
+          
+          // Handle memory leak in IE
+           preloadElem.onload = preloadElem.onreadystatechange = null;
         }
       }
     }
@@ -218,6 +227,10 @@ var docElement            = doc.documentElement,
     // Setting url to data for objects or src for img/scripts
     if ( elem == "object" ) {
       preloadElem.data = url;
+	  
+      // Setting the type attribute to stop Firefox complaining about the mimetype when running locally.
+      // The type doesn't matter as long as it's real, thus text/css instead of text/javascript.
+      preloadElem.setAttribute("type", "text/css");
     } else {
       preloadElem.src = url;
 
@@ -243,6 +256,7 @@ var docElement            = doc.documentElement,
     if ( elem != "img" ) {
       // If it's the first time, or we've already loaded it all the way through
       if ( firstFlag || scriptCache[ url ] === 2 ) {
+        readFirstScript();
         insBeforeObj.insertBefore( preloadElem, isGeckoLTE18 ? null : firstScript );
 
         // If something fails, and onerror doesn't fire,
@@ -330,8 +344,11 @@ var docElement            = doc.documentElement,
       return res;
     }
 
-    function getExtension ( url ) {
-        return url.split(".").pop().split("?").shift();
+     function getExtension ( url ) {
+      //The extension is always the last characters before the ? and after a period.
+      //The previous method was not accounting for the possibility of a period in the query string.
+      var b = url.split('?')[0];
+      return b.substr(b.lastIndexOf('.')+1);
     }
 
     function loadScriptOrStyle ( input, callback, chain, index, testResult ) {
@@ -360,7 +377,7 @@ var docElement            = doc.documentElement,
       }
       else {
         // Handle if we've already had this url and it's completed loaded already
-        if ( scriptCache[ resource['url'] ] ) {
+        if ( scriptCache[ resource['url'] ] && resource['reexecute'] !== true) {
           // don't let this execute again
           resource['noexec'] = true;
         }
@@ -369,7 +386,7 @@ var docElement            = doc.documentElement,
         }
 
         // Throw this into the queue
-        chain.load( resource['url'], ( ( resource['forceCSS'] || ( ! resource['forceJS'] && "css" == getExtension( resource['url'] ) ) ) ) ? "c" : undef, resource['noexec'], resource['attrs'], resource['timeout'] );
+        input && chain.load( resource['url'], ( ( resource['forceCSS'] || ( ! resource['forceJS'] && "css" == getExtension( resource['url'] ) ) ) ) ? "c" : undef, resource['noexec'], resource['attrs'], resource['timeout'] );
 
         // If we have a callback, we'll start the chain over
         if ( isFunction( callback ) || isFunction( autoCallback ) ) {
@@ -402,7 +419,7 @@ var docElement            = doc.documentElement,
         // NOTE:: relies on closures to keep 'chain' up to date, a bit confusing, but
         // much smaller than the functional equivalent in this case.
         function handleGroup ( needGroup, moreToCome ) {
-          if ( ! needGroup ) {
+          if ( '' !== needGroup && ! needGroup ) {
             // Call the complete callback when there's nothing to load.
             ! moreToCome && complete();
           }
@@ -469,11 +486,15 @@ var docElement            = doc.documentElement,
         }
 
         // figure out what this group should do
-        handleGroup( group, !!always );
+        handleGroup( group, !!always || !!testObject['complete']);
 
         // Run our loader on the load/both group too
         // the always stuff always loads second.
         always && handleGroup( always );
+
+	// If complete callback is used without loading anything
+        !always && !!testObject['complete'] && handleGroup('');
+
     }
 
     // Someone just decides to load a single script or css file as a string
