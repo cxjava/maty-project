@@ -8,4 +8,423 @@
   <artifactId>j2ee-extjs</artifactId>
   <packaging>war</packaging>
   <name>J2EE by ExtJS</name>
+  
+  
+  
+	<properties>
+		<!-- Plugin的属性定义 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.6</jdk.version>
+
+		<!-- 项目属性 -->
+		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
+		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
+		<jdbc.driver.version>5.1.21</jdbc.driver.version>
+	</properties>
+	
+
+	<!-- 依赖项定义 -->
+	<dependencies>
+		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-core</artifactId>
+		</dependency>
+		<!-- AOP begin -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- AOP end -->
+
+		<!-- PERSISTENCE begin -->
+		<!-- hibernate -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+
+		<!-- spring data access -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit-dep</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<!-- dbcp connection pool -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+		</dependency>
+		<!-- jdbc driver -->
+		<dependency>
+			<groupId>${jdbc.driver.groupId}</groupId>
+			<artifactId>${jdbc.driver.artifactId}</artifactId>
+			<version>${jdbc.driver.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- PERSISTENCE end -->
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>		
+		
+		<!-- WEB begin -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- WEB end -->
+		
+		<!-- SECURITY begin -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-ehcache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<!-- SECURITY end -->
+		
+		<!-- JSR303  BeanValidator -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		
+		<!-- JSON begin -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-jaxb-annotations</artifactId>
+		</dependency>
+		<!-- JSON end -->
+		
+		<!-- LOGGING begin -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+		</dependency>
+		<!-- LOGGING end -->
+
+		<!-- GENERAL UTILS begin -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency>
+		<!-- GENERAL UTILS end -->
+
+		<!-- TEST begin -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- jetty -->
+		<dependency>
+			<groupId>org.eclipse.jetty.aggregate</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jsp</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Test end -->
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- compiler插件, 设定JDK版本 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+
+			<!-- war打包插件, 设定war包名称不带版本号 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warName>${project.artifactId}</warName>
+				</configuration>
+			</plugin>
+
+			<!-- test插件, 仅测试名称为*Test的类,使用支持分组测试的surefire-junit47 driver -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<argLine>-Xmx256M</argLine>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>2.12.4</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<!-- cobertura插件, 设置不需要计算覆盖率的类 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<instrumentation>
+						<excludes>
+							<exclude>**/entity/**/*.class</exclude>
+							<exclude>**/*Controller.class</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
+			</plugin>
+
+			<!-- enforcer插件, 设定环境与依赖的规则 -->
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>enforce-banned-dependencies</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<requireMavenVersion>
+                  						<version>3.0.3</version>
+                					</requireMavenVersion>
+                					<requireJavaVersion>
+                  						<version>1.6</version>
+                					</requireJavaVersion>
+									<bannedDependencies>
+										<searchTransitive>true</searchTransitive>
+										<excludes>
+											<exclude>commons-logging</exclude>
+											<exclude>aspectj:aspectj*</exclude>
+											<exclude>org.springframework:2.*</exclude>
+											<exclude>org.springframework:3.0.*</exclude>
+										</excludes>
+									</bannedDependencies>
+								</rules>
+								<fail>true</fail>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			
+			<!-- jetty插件, 设定context path与spring profile -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<configuration>
+					<useTestClasspath>true</useTestClasspath>
+					<webAppConfig>
+						<contextPath>/${project.artifactId}</contextPath>
+					</webAppConfig>
+				</configuration>
+			</plugin>
+
+			<!-- resource插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			
+			<!-- install插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+			</plugin>
+
+			<!-- clean插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+			</plugin>
+			
+			<!-- ant插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution><!-- 打包之前做 -->
+						<phase>prepare-package</phase>  
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="开始用uglifyjs压缩 JSP 文件. 请耐心等待！" />
+								<property name="uglifyjs" value="${project.build.directory}/uglify/uglifyjs" />
+								<property name="jsp.compress.out.directory" value="${project.build.directory}/${project.build.finalName}/WEB-INF" />
+								<property name="jsp.compress.directory" value="src/main/webapp/WEB-INF" />
+								<apply executable="node" parallel="false" failonerror="true" dest="${jsp.compress.directory}">
+									<fileset dir="${jsp.compress.directory}" includes="**/*.jsp" />
+									<arg line=" ${uglifyjs}" />
+									<arg line=" --ascii" />
+									<arg line=" -o" />
+									<targetfile />
+									<srcfile />
+									<mapper type="regexp" from="^(.*)\.(jsp)$" to="\1-min.\2" />
+								</apply>
+								<move todir="${jsp.compress.out.directory}">
+									<fileset dir="${jsp.compress.directory}" includes="**/*-min.jsp" />
+									<mapper type="regexp" from="^(.*)-min\.(jsp)$" to="\1.\2" />
+								</move>
+								<echo message="成功用uglifyjs压缩 JSP 文件" />
+								
+								<echo message="开始用uglifyjs压缩 JS 文件. 请耐心等待！" />
+								<property name="uglifyjs" value="${project.build.directory}/uglify/uglifyjs" />
+								<property name="js.compress.out.directory" value="${project.build.directory}/${project.build.finalName}/resources/js" />
+								<property name="js.compress.directory" value="src/main/webapp/resources/js" />
+								<apply executable="node" parallel="false" failonerror="true" dest="${js.compress.directory}">
+									<fileset dir="${js.compress.directory}" includes="**/*.js" />
+									<arg line=" ${uglifyjs}" />
+									<arg line=" --ascii" />
+									<arg line=" -o" />
+									<targetfile />
+									<srcfile />
+									<mapper type="regexp" from="^(.*)\.(js)$" to="\1-min.\2" />
+								</apply>
+								<move todir="${js.compress.out.directory}">
+									<fileset dir="${js.compress.directory}" includes="**/*-min.js" />
+									<mapper type="regexp" from="^(.*)-min\.(js)$" to="\1.\2" />
+								</move>
+								<echo message="成功用uglifyjs压缩 JS 文件" />
+								
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- dependency插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
