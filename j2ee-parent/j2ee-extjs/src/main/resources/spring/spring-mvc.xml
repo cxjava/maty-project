@@ -51,7 +51,6 @@
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
     	<property name="defaultLocale" value="en_US" />
     	<property name="cookieName" value="lang"/>
-    	
 	</bean>
 	
 	<mvc:interceptors>
