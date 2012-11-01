@@ -12,8 +12,6 @@
 	<link rel="icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 	<script src="${ctx}/resources/libs/yepnope/yepnope.js" type="text/javascript"></script>
 	<link href="${ctx}/resources/css/progress.css" rel="stylesheet" type="text/css" />
-	<link href="${ctx}/resources/libs/extjs/resources/css/ext-all.css" rel="stylesheet" type="text/css" />
-	<link href="${ctx}/resources/css/default.css" rel="stylesheet" type="text/css" />
 	<style type="text/css">
 		#loading {
 			position: absolute;
@@ -61,16 +59,17 @@
 	language = "${language}";
 	all = {
 		"ext-all" : loadProgress("ext-all", 1),
-		"ext-lang" : loadProgress("ext-lang", 1.5),
-		'jquery' : loadProgress("jquery", 1.5),
-		'jquery-json' : loadProgress("jquery-json", 1.5),
-		'jquery-center' : loadProgress("jquery-center", 1.5)/* ,
+		"ext-lang" : loadProgress("ext-lang", 0.5),
+		'jquery' : loadProgress("jquery", 1),
+		'jquery-json' : loadProgress("jquery-json", 0.5),
+		'jquery-center' : loadProgress("jquery-center", 0.5)/* ,
 		'bundle' : loadProgress("bundle", 3.5),
 		'reader-property' : loadProgress("reader-property", 3.5),
 		'model-property' : loadProgress("model-property", 3.5) */
 	},
 	yepnope({
 		load : { //extjs
+			'ext-css' : "${ctx}/resources/libs/extjs/resources/css/ext-all.css",
 			'ext-all' : "${ctx}/resources/libs/extjs/ext-all.js",
 			'ext-lang' : "${ctx}/resources/libs/extjs/locale/ext-lang-${language}.js",
 			//jquery
@@ -81,7 +80,8 @@
 			'model-property' : "${ctx}/resources/libs/extjs-i18n/model/Property.js" ,
 			'bundle' : "${ctx}/resources/libs/extjs-i18n/Bundle.js",
 			'messages-properties' : "preload!${ctx}/resources/i18n/messages_${language}.properties" ,
-			'login' : "preload!${ctx}/resources/js/login.js"
+			'login' : "preload!${ctx}/resources/js/login.js",
+			'default-css' : "${ctx}/resources/css/default.css"
 		},
 		callback : {
 			'ext-all' : function(url, result, key) {
@@ -130,18 +130,7 @@
 			all=null;
 			var div=document.getElementById("loading");
 			div.parentNode.removeChild(div); 
-			yepnope.injectJs("${ctx}/resources/js/login.js", function () {
-				  console.log("jQuery loaded!");
-				}, {
-				  charset: "utf-8"
-				}, 5000);
-			//div.style.display="none";
-			/* Ext.QuickTips.init();
-			Ext.form.Field.prototype.msgTarget = 'title';//qtip,title,under,side
-			Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
-			Ext.BLANK_IMAGE_URL = '${ctx}/resources/extjs/resources/images/default/s.gif';
-			yepnope("${ctx}/resources/js/login.js");
-			$("#logo-table a").html('<img src="${ctx}/resources/images/login.gif"></img>');*/
+			yepnope.injectJs("${ctx}/resources/js/login.js");
 		}
 	});
 </script>
