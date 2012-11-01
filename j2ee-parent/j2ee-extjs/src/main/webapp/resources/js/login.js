@@ -1,38 +1,36 @@
-$(document).ready(function() {
-	// 提示
-	$('p.help-block').tooltip({
-		placement : 'bottom',// 提示位置，上面要遮挡密码框，所以改为下面
-		selector : "label[rel=tooltip]"// 哪里需要提示
-	});
-	// 表单验证
-	$("#loginForm").submit(function() {
-		if ($("#loginForm").validationEngine('validate')) {
-			var username = $("#password").val();
-			$("#password").val($.md5(username));// 密码加密发送下
-		}
-	}).validationEngine({
-		// 表单提交时才验证，默认的是失去焦点验证
-		validationEventTrigger : "submit"
-	});
-	// 绑定enter键
-	$("body").bind('keydown', function(event) {
-		// 回车
-		if (event.which == 13) {
-			$("#submit").trigger("click");
-		}
-	});
-	// 页面初始化后，焦点定位
-	if ($.trim($("#username").val()) === "") {
-		$("#username").focus();
-	} else {
-		$("#password").focus();
+Ext.Loader.setConfig({
+	enabled : true,
+	paths : {
+		'Ext.i18n' : 'resources/libs/extjs-i18n'
 	}
-	$("#reset").click(function() {
-		$.post(ctx + "/get", {
-			name : 'maty',
-			age : 23
-		}, function(json) {
-			alert(json);
-		}, 'json');
+});
+Ext.require('Ext.i18n.Bundle', function() {
+	// create global bundle in here
+	language = Ext.create('Ext.i18n.Bundle', {
+		bundle : 'messages',
+		lang : language,
+		path : 'resources/i18n',
+		noCache : true
 	});
 });
+Ext.application({
+	name : 'AppTest',
+	launch : function() {
+
+		language.onReady(function() {
+			Ext.create('Ext.panel.Panel', {
+				renderTo : Ext.getBody(),
+				tbar : Ext.create('Ext.toolbar.Toolbar', {
+					items : [ {
+						text : language.getMsg('login.form.submit')
+					} ]
+				}),
+				items : [ {
+					height : 300,
+					html : language.getMsg('login.page.title')
+				} ],
+			});
+		});// end bundle on ready
+	}
+});
+console.log(new Date());

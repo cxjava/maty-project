@@ -20,6 +20,14 @@ public class HomeController {
 		// 转到登录页面
 		return "login";
 	}
+	/**
+	 * 主页
+	 */
+	@RequestMapping("/1")
+	public String home1() {
+		// 转到登录页面
+		return "login1";
+	}
 
 	/**
 	 * 主页面
