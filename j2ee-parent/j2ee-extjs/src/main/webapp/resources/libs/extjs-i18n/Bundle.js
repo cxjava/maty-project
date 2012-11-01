@@ -29,11 +29,11 @@ Ext.application({
  */
 Ext.define('Ext.i18n.Bundle', {
 	extend: 'Ext.data.Store',
-	requires: [
+	/*requires: [
 		'Ext.i18n.reader.Property',
 		'Ext.i18n.model.Property'
 	],
-	
+	*/
 	//@private
 	defaultLanguage: 'en-US',
 	//@private

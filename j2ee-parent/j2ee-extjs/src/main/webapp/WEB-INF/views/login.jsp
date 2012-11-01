@@ -77,10 +77,11 @@
 			'jquery' : "${ctx}/resources/libs/jquery/jquery-1.7.2.min.js",
 			'jquery-json' : "${ctx}/resources/libs/jquery-plugin/jquery.json-2.3.min.js",
 			'jquery-center' : "${ctx}/resources/libs/jquery-plugin/jquery.center.min.js" ,
-			'login' : "preload!${ctx}/resources/js/login.js"/*,
-			'bundle' : "${ctx}/resources/libs/extjs-i18n/Bundle.js",
 			'reader-property' : "${ctx}/resources/libs/extjs-i18n/reader/Property.js",
-			'model-property' : "${ctx}/resources/libs/extjs-i18n/model/Property.js" */
+			'model-property' : "${ctx}/resources/libs/extjs-i18n/model/Property.js" ,
+			'bundle' : "${ctx}/resources/libs/extjs-i18n/Bundle.js",
+			'messages-properties' : "preload!${ctx}/resources/i18n/messages_${language}.properties" ,
+			'login' : "preload!${ctx}/resources/js/login.js"
 		},
 		callback : {
 			'ext-all' : function(url, result, key) {

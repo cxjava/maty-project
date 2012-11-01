@@ -1,10 +1,10 @@
-Ext.Loader.setConfig({
+/*Ext.Loader.setConfig({
 	enabled : true,
 	paths : {
 		'Ext.i18n' : 'resources/libs/extjs-i18n'
 	}
-});
-Ext.require('Ext.i18n.Bundle', function() {
+});*/
+//Ext.require('Ext.i18n.Bundle', function() {
 	// create global bundle in here
 	language = Ext.create('Ext.i18n.Bundle', {
 		bundle : 'messages',
@@ -12,7 +12,7 @@ Ext.require('Ext.i18n.Bundle', function() {
 		path : 'resources/i18n',
 		noCache : true
 	});
-});
+//});
 Ext.application({
 	name : 'AppTest',
 	launch : function() {
