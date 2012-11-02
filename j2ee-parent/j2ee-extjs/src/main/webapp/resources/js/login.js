@@ -16,7 +16,7 @@
 					bodyPadding : 10,
 					fieldDefaults : {
 						labelAlign : 'left',
-						labelWidth : 55,
+						labelWidth : 80,
 						labelStyle : 'font-weight:bold'
 					},
 					defaults : {
@@ -24,24 +24,24 @@
 					},
 					items : [ {
 						xtype : 'textfield',
-						fieldLabel : '用户名',
+						fieldLabel : language.getMsg("login.form.username"),
 						// blankText : '用户名不能为空',
 						name : 'UserName',
 						id : 'UserName',
 						allowBlank : false,
-						width : 240
+						width : 260
 					}, {
 						xtype : 'textfield',
-						fieldLabel : '密   码',
+						fieldLabel : language.getMsg("login.form.password"),
 						allowBlank : false,
 						// blankText : '密码不能为空',
 						name : 'PassWord',
 						id : 'PassWord',
-						width : 240,
+						width : 260,
 						inputType : 'password'
 					} ],
 					buttons : [ {
-						text : '登录',
+						text : language.getMsg("login.form.submit"),
 						handler : function() {
 							var form = this.up('form').getForm();
 							var win = this.up('window');
@@ -70,7 +70,7 @@
 							}
 						}
 					}, {
-						text : '取消',
+						text : language.getMsg("login.form.reset"),
 						handler : function() {
 
 						}
@@ -78,8 +78,8 @@
 				});
 				Ext.apply(this, {
 					height : 160,
-					width : 280,
-					title : '用户登陆',
+					width : 320,
+					title : language.getMsg('login.windows.title'),
 					closeAction : 'hide',
 					closable : false,
 					iconCls : 'win',
