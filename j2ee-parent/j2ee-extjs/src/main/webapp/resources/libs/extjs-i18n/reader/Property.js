@@ -1,1 +1,52 @@
-Ext.define("Ext.i18n.reader.Property",{extend:"Ext.data.reader.Json",alias:"reader.property",constructor:function(a){a=a||{},Ext.applyIf(a,{idProperty:"key",successProperty:"success",totalProperty:"total"}),this.callParent([a])},getResponseData:function(a){return this.readRecords(a)},getData:function(a){var b=[],c,d,e=this.readLines(a),f=e.length;for(var g=0;g<f;g++){var h=e[g].search(/[\s:=]/);c={value:this.clearValueExtraChars(e[g].substring(h+1)),key:this.clearKeyExtraChars(e[g].substring(0,h))},b[g]=c}return b},clearKeyExtraChars:function(a){return a?a.replace(/[:=]/gi,""):""},clearValueExtraChars:function(a){return a?a.replace(/\\\s*\n/gi,""):""},readLines:function(a){var b=a.responseText;return b?b.match(/.*(.*\\\s*\n)+.*|^((?!^\s*[#!]).).*$/gim):[]}});
+Ext.define('Ext.i18n.reader.Property', {
+    extend: 'Ext.data.reader.Json',
+    alias : 'reader.property',
+	
+	constructor: function(config){
+		config = config || {};
+		
+		Ext.applyIf(config, {
+	        idProperty: 'key',
+	        successProperty: 'success',
+	        totalProperty: 'total'
+	    });
+	
+		this.callParent([config]);
+	},
+	
+	getResponseData: function(response){
+	    return this.readRecords(response);
+	},
+	
+
+	getData: function(data){
+        var records = [], record, kv,
+			f = this.readLines(data),
+			l = f.length;
+		for(var i = 0; i < l; i++){
+			var kl = f[i].search(/[\s:=]/);
+				record = {
+				    value : this.clearValueExtraChars(f[i].substring(kl+1)),
+				    key  :  this.clearKeyExtraChars(f[i].substring(0, kl))
+				};
+				records[i] = record;
+		}
+		return records;
+	},
+
+	clearKeyExtraChars: function(s){
+		return (s ? s.replace(/[:=]/gi, "") : "");
+	},
+	
+	clearValueExtraChars: function(s){
+		return (s ? s.replace(/\\\s*\n/gi, "") : "");
+	},
+	
+	//private
+	readLines: function(data){
+		var file = data.responseText;
+		return (file ? file.match(/.*(.*\\\s*\n)+.*|^((?!^\s*[#!]).).*$/gim) : []);
+	}
+	
+
+});

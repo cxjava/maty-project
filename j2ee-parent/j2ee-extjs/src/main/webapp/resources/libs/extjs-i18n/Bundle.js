@@ -4,4 +4,184 @@
  * @extends Ext.data.Store
  *
  * Bundle is used to load .properties bundle files based in language and expose the bundle's keys thru getMsg method.
- */Ext.define("Ext.i18n.Bundle",{extend:"Ext.data.Store",defaultLanguage:"en-US",resourceExt:".properties",config:{bundle:"message",path:"resources"},constructor:function(e){e=e||{};var t=this,n=t.formatLanguageCode(e.lang||t.guessLanguage()),r=e.noCache!==!1,i;t.language=n,t.bundle=e.bundle||t.bundle,t.path=e.path||t.path,i=this.buildURL(n),delete e.lang,delete e.noCache,Ext.applyIf(e,{autoLoad:!0,model:"Ext.i18n.model.Property",proxy:{type:"ajax",url:i,noCache:r,reader:{type:"property"},getParams:Ext.emptyFn},listeners:{load:this.onBundleLoad,scope:this}}),t.callParent([e]),t.getProxy().on("exception",this.loadParent,this,{single:!0})},guessLanguage:function(){return navigator.language||navigator.browserLanguage||navigator.userLanguage||this.defaultLanguage},getMsg:function(e){var t=this.getById(e);return console.log(e),console.log(t),t?Ext.util.Format.htmlDecode(t.get("value")):e+".undefined"},onReady:function(e){this.readyFn=e,this.on("loaded",this.readyFn,this)},onBundleLoad:function(e,t,n,r){n&&this.fireEvent("loaded")},onProxyLoad:function(e){e.getRecords()&&this.callParent(arguments)},buildURL:function(e){var t="";return this.path&&(t+=this.path+"/"),t+=this.bundle,e&&(t+="_"+e),t+=this.resourceExt,t},loadParent:function(){this.getProxy().url=this.buildURL(),this.load()},formatLanguageCode:function(e){var t=e.split("_");return t[0]=t[0]?t[0].toLowerCase():"",t[1]=t[1]?t[1].toUpperCase():"",t.join("_")}});
+ <code>
+Ext.application({
+	name: 'AppTest',
+	launch: function(){
+
+		bundle = Ext.create('Ext.i18n.Bundle',{
+			bundle: 'Application',
+			lang: 'es-ES',
+			path: 'resources',
+			noCache: false
+		});
+
+		bundle.onReady(function(){
+			Ext.create('Ext.Panel',{
+				fullscreen: true,
+				html: bundle.getMsg('panel.html')
+			});
+		});
+	}
+});
+
+ </code>
+ */
+Ext.define('Ext.i18n.Bundle', {
+	extend: 'Ext.data.Store',
+	/*requires: [
+		'Ext.i18n.reader.Property',
+		'Ext.i18n.model.Property'
+	],*/
+	
+	//@private
+	defaultLanguage: 'en-US',
+	//@private
+	resourceExt: '.properties',
+	
+	config:{
+		/**
+		 * @cfg bundle {String} bundle name for properties file. Default to message  
+		 */
+		bundle: 'message',
+
+		/**
+		 * @cfg path {String} URI to properties files. Default to resources
+		 */
+		path: 'resources'
+
+		/**
+		 * @cfg lang {String} Language in the form xx-YY where:
+		 * 		xx: Language code (2 characters lowercase) 
+    	 *      YY: Country code (2 characters upercase). 
+		 * Optional. Default to browser's language. If it cannot be determined default to en-US.
+		 */
+		
+		/**
+		 * @cfg noCache {boolean} whether or not to disable Proxy's cache. Optional. Defaults to true. 
+		 */
+		
+	},
+	
+	
+	constructor: function(config){
+		config = config || {};
+
+		var me = this,
+			language = me.formatLanguageCode(config.lang || me.guessLanguage()),
+			noCache = (config.noCache !== false),
+			url;
+
+		me.language = language;
+		me.bundle = config.bundle || me.bundle;
+		me.path = config.path || me.path;
+			
+		url = this.buildURL(language);
+
+		delete config.lang;
+		delete config.noCache;
+		
+		Ext.applyIf(config, {
+			autoLoad: true,
+			model: 'Ext.i18n.model.Property',
+			proxy:{
+				type: 'ajax',
+				url: url,
+				noCache: noCache,
+				reader: {
+					type: 'property'
+				},
+				//avoid sending limit, start & group params to server
+				getParams: Ext.emptyFn
+			},
+			listeners:{
+				'load': this.onBundleLoad,
+				scope: this
+			}
+		});
+
+		me.callParent([config]);
+		me.getProxy().on('exception', this.loadParent, this, {single: true});
+	},
+	
+	/**
+	 * @private
+	 */
+	guessLanguage: function(){
+		return (navigator.language || navigator.browserLanguage
+				|| navigator.userLanguage || this.defaultLanguage);
+	},
+	
+	/**
+	 * @method: getMsg
+	 * Returns the content associated with the bundle key or {bundle key}.undefined if it is not specified.
+	 * @param: key {String} Bundle key.
+	 * @return: {String} The bundle key content. 
+	 */
+	getMsg: function(key){
+		var rec = this.getById(key);
+		return rec ? Ext.util.Format.htmlDecode(rec.get('value')) : key + '.undefined';
+	},
+	
+	/**
+	 * @method: onReady
+	 * The fn will be called when the Bundle file is loaded.
+	 * @param: fn {Function}
+	 */
+	onReady: function(fn){
+		this.readyFn = fn;
+		this.on('loaded', this.readyFn, this);
+	},
+	
+	/**
+	 * @private
+	 */
+	onBundleLoad: function(store, record, success, op) {
+		if(success){
+			this.fireEvent('loaded');
+		}
+    },
+
+	/**
+	 * @private
+	 */
+	onProxyLoad: function(op){
+		if(op.getRecords()){
+
+			this.callParent(arguments);
+		}
+	},
+	
+	/**
+	 * @private
+	 */
+	buildURL: function(language){
+		var url = '';
+		if (this.path) url+= this.path + '/';
+		url+=this.bundle;
+		if (language) url+= '_'+language;
+		url+=this.resourceExt;
+		return url;
+	},
+	
+	/**
+	 * @private
+	 */
+	loadParent: function(){
+		this.getProxy().url = this.buildURL();
+		this.load();			
+	},
+	
+	/**
+	 * @private
+	 */
+	formatLanguageCode: function(lang){
+		var langCodes = lang.split('-');
+		langCodes[0] = (langCodes[0]) ? langCodes[0].toLowerCase() : '';
+		langCodes[1] = (langCodes[1]) ? langCodes[1].toUpperCase() : '';
+		return langCodes.join('-');
+	}
+	
+	
+	
+});

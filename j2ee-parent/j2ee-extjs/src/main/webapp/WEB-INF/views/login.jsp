@@ -10,7 +10,7 @@
 	<title><spring:message code="login.page.title"/></title>
 	<link rel="shortcut icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
-	<script src="${ctx}/resources/libs/yepnope/yepnope.min.js" type="text/javascript"></script>
+	<script src="${ctx}/resources/libs/yepnope/yepnope.js" type="text/javascript"></script>
 	<link href="${ctx}/resources/css/progress.css" rel="stylesheet" type="text/css" />
 	<style type="text/css">
 		#loading {
@@ -57,51 +57,40 @@
 	ctx = "${ctx}";
 	language = "${language}";
 	all = {
-		"ext-all.css" : loadProgress("ext-all.css", 0.8),
-		"ext-all" : loadProgress("ext-all", 1.2),
-		'jquery' : loadProgress("jquery", 0.8)
+		"ext-all.css" : loadProgress("ext-all.css", 2),
+		"ext-all" : loadProgress("ext-all", 1.5),
+		'jquery' : loadProgress("jquery", 1)
 	},
 	yepnope({
 		load : {
-			'ext-all.css' : "${ctx}/resources/libs/extjs/resources/css/ext-all.css",
-			'ext-all' : "${ctx}/resources/libs/extjs/ext-all.js",
-			'jquery' : "${ctx}/resources/libs/jquery/jquery-1.7.2.min.js",
+			'default-css' : "${ctx}/resources/css/default.css",
+			'ext-all.css' : "timeout=30000!${ctx}/resources/libs/extjs/resources/css/ext-all.css",
+			'ext-all' : "timeout=90000!${ctx}/resources/libs/extjs/ext-all.js",
 			'ext-lang' : "${ctx}/resources/libs/extjs/locale/ext-lang-${language}.js",
-			'reader-property' : "${ctx}/resources/libs/extjs-i18n/reader/Property.js",
-			'model-property' : "${ctx}/resources/libs/extjs-i18n/model/Property.js",
-			'bundle' : "${ctx}/resources/libs/extjs-i18n/Bundle.js",
-			'login' : "preload!${ctx}/resources/js/login.js",
-			'default-css' : "${ctx}/resources/css/default.css"
+			'bundle' : "${ctx}/resources/libs/extjs-i18n/Bundle.min.js",
+			'jquery' : "timeout=30000!${ctx}/resources/libs/jquery/jquery-1.7.2.min.js",
+			'login' : "preload!${ctx}/resources/js/login.js"
 		},
 		callback : {
 			'ext-all.css' : function(url, result, key) {
-				console.log("ext-all.css");
 				clearInterval(all[key].timeout);
 				all[key].obj.style.width = "100%";
 			},
 			'ext-all' : function(url, result, key) {
-				console.log("ext-all.js");
-				if (!Ext) {
-					console.log("load ext-all.js again!");
-					yepnope.injectJs("${ctx}/resources/libs/extjs/ext-all.js");
-				}
 				clearInterval(all[key].timeout);
 				all[key].obj.style.width = "100%";
 			},
 			'jquery' : function(url, result, key) {
-				console.log("jquery.js");
 				clearInterval(all[key].timeout);
 				all[key].obj.style.width = "100%";
-			},
-			'login' : function(url, result, key) {
-				console.log("login.js");
 			}
 		},
 		complete : function() {
+				console.log("complete");
 			/* all = null;
 			var div = document.getElementById("loading");
 			div.parentNode.removeChild(div); */
-			//yepnope.injectJs("${ctx}/resources/js/login.js");
+			yepnope.injectJs("${ctx}/resources/js/login.js",{},{},3e4);//30s
 		}
 	});
 </script>
