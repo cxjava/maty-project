@@ -69,7 +69,7 @@ body {
 				// and change the default timeout(10s) more long, 30s,60s
 				'ext-all-css' : 'timeout=30000!${ctx}/resources/libs/extjs/resources/css/ext-all.css',
 				'jquery' : 'timeout=30000!${ctx}/resources/libs/jquery/jquery-1.7.2.min.js',
-				'ext-all' : 'timeout=90000!${ctx}/resources/libs/extjs/ext-all-debug.js',
+				'ext-all' : 'timeout=90000!${ctx}/resources/libs/extjs/ext-all.js',
 				'ext-lang' : '${ctx}/resources/libs/extjs/locale/ext-lang-${language}.js',
 				'bundle' : '${ctx}/resources/libs/extjs-i18n/Bundle.min.js',
 				'login' : 'preload!${ctx}/resources/js/login.js'
