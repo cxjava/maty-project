@@ -260,6 +260,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
+					<warSourceExcludes>resources/js/**/*.js,WEB-INF/views/**/*.jsp</warSourceExcludes>
 					<warName>${project.artifactId}</warName>
 				</configuration>
 			</plugin>
@@ -347,6 +348,27 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-config</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/test/resources</directory>
+									<includes>
+										<include>uglify/*</include>
+										<include>uglify/lib/*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			
 			<!-- install插件 -->
@@ -405,12 +427,11 @@
 									<srcfile />
 									<mapper type="regexp" from="^(.*)\.(js)$" to="\1-min.\2" />
 								</apply>
-								<move todir="${js.compress.out.directory}">
-									<fileset dir="${js.compress.directory}" includes="**/*-min.js" />
+								<move todir="${js.compress.out.directory}" verbose="true">
+									<fileset dir="${js.compress.directory}"  includes="**/*-min.js" />
 									<mapper type="regexp" from="^(.*)-min\.(js)$" to="\1.\2" />
 								</move>
 								<echo message="成功用uglifyjs压缩 JS 文件" />
-								
 							</target>
 						</configuration>
 					</execution>
@@ -421,6 +442,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
