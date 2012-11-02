@@ -1,4 +1,4 @@
-(function() {
+!(function() {
 	language = Ext.create('Ext.i18n.Bundle', {
 		bundle : 'messages',
 		lang : language,
