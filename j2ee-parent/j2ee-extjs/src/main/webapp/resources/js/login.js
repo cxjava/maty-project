@@ -6,7 +6,7 @@
 		noCache : true
 	});
 	language.onReady(function() {
-		Ext.define('MATY.view.Login', {
+		Ext.define('Maty.View.Login', {
 			extend : 'Ext.window.Window',
 			alias : 'widget.loginForm',
 			// requires : [ 'Ext.form.*', 'SMS.view.CheckCode' ],
@@ -81,18 +81,18 @@
 					width : 320,
 					title : language.getMsg('login.windows.title'),
 					closeAction : 'hide',
-					closable : false,
+					closable : true,
 					iconCls : 'win',
 					layout : 'fit',
-					modal : true,
+					modal : false,
 					plain : true,
-					resizable : false,
+					resizable : true,
 					items : form
 				});
 				this.callParent(arguments);
 			}
 		});
-		Ext.create("MATY.view.Login").show();
+		Ext.create("Maty.View.Login").show();
 	});// end bundle on ready
 
 })();

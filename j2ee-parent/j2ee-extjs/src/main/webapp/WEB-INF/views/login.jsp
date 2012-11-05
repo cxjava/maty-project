@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<c:set var="language" value="${pageContext.response.locale==null?'en_US':pageContext.response.locale}" />
+<c:set var="language" value="${(pageContext.response.locale)==null?'en_US':(pageContext.response.locale)}" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -28,9 +28,11 @@ body {
 </head>
 
 <body>
-	<a href="?locale=zh_CN">中文</a>
-	<a href="?locale=en_US">English</a>
-	<a href="?locale=de_DE">Deutsch</a>
+	<div align="right" style="margin-right: 20px;height: 14px;width: ">
+		<a href="?locale=zh_CN">中文</a>
+		<a href="?locale=en_US">English</a>
+		<a href="?locale=de_DE">Deutsch</a>
+	</div>
 
 	<div id="loading">
 		<div class="progress progress-striped active">
