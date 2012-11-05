@@ -29,12 +29,14 @@
 		<property name="jpaProperties">
 			<props>
 				<!-- 命名规则 My_NAME->MyName -->
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
 			</props>
 		</property>
 	</bean>
 	
 	<bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="showSql" value="false" />
 		<property name="generateDdl" value="true" />
 		<property name="database" value="MYSQL" />
 	</bean>
