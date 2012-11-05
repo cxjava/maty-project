@@ -1,5 +1,7 @@
 package com.maty.j2ee.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -11,15 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class HomeController {
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	/**
 	 * 主页
 	 */
 	@RequestMapping("/")
 	public String home() {
-		// 转到登录页面
-		return "login";
+		try {
+			return "login";
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			return null;
+		}
 	}
+
 	/**
 	 * 主页
 	 */
