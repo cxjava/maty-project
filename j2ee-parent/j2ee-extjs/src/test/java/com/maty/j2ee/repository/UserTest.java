@@ -1,8 +1,9 @@
 package com.maty.j2ee.repository;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,25 @@ public class UserTest extends Base {
 	public void testDeleteUser() {
 		userRepository.deleteAll();
 	}
+
 	@Test
-	public void testFindByAccount(){
+	public void testFindByAccount() {
 		userRepository.save(user);
-		List<User> user=userRepository.findByAccount("LiHuai");
-		Assert.assertEquals(user.size(), 1);
+		List<User> user = userRepository.findByAccount("LiHuai");
+		assertEquals(user.size(), 1);
+	}
+
+	@Test
+	public void testFindByAccountAndName() {
+		userRepository.save(user);
+		List<User> user = userRepository.findByAccountAndName("LiHuai", "李坏");
+		assertEquals(user.get(0).getAccount(), "LiHuai");
+	}
+
+	@Test
+	public void testFindByAccountAndNameOrPassword() {
+		userRepository.save(user);
+		List<User> user = userRepository.findByAccountAndNameOrPassword("LiHuai", "李坏", "123");
+		assertEquals(user.get(0).getAccount(), "LiHuai");
 	}
 }
