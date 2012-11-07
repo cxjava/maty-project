@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:/spring/spring.xml" })
 @Transactional
-//@ActiveProfiles("dev")
+// @ActiveProfiles("dev")
 public class Base {
 
 }

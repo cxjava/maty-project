@@ -11,7 +11,7 @@ public interface BaseUserService {
 	 * 保存用户
 	 * 
 	 * @param user
-	 * @return 
+	 * @return
 	 */
 	BaseUser saveUser(BaseUser user);
 

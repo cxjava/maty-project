@@ -36,8 +36,8 @@ public class BaseUserTest extends Base {
 
 	@Test
 	public void testSaveUser() {
-		user=userService.saveUser(user);
-		logger.debug("user:{}",user);
+		user = userService.saveUser(user);
+		logger.debug("user:{}", user);
 	}
 
 	@Test

@@ -41,5 +41,4 @@ public class BaseUserRepositoryTest extends Base {
 		assertNotNull(baseUser);
 		assertEquals(baseUser.getAccount(), "admin");
 	}
-
 }

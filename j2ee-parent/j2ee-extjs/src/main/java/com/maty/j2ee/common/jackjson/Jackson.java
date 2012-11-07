@@ -23,8 +23,9 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
  */
 public class Jackson {
 	private static final Logger logger = LoggerFactory.getLogger(Jackson.class);
+
 	/** 格式化时间的string */
-	//private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	// private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	/**
 	 * fromJsonToObject<br>

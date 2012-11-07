@@ -15,7 +15,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * 
  * @author calvin
  */
-//JPA 基类的标识
 @MappedSuperclass
 public abstract class IdEntity {
 
@@ -30,7 +29,7 @@ public abstract class IdEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
