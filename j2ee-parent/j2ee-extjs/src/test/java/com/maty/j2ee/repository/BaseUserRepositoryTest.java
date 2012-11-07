@@ -41,4 +41,14 @@ public class BaseUserRepositoryTest extends Base {
 		assertNotNull(baseUser);
 		assertEquals(baseUser.getAccount(), "admin");
 	}
+
+	@Test
+	public void testFindManyToMany() {
+		baseUser = repository.findOne(2L);
+		logger.info("user:{}", baseUser);
+		assertNotNull(baseUser);
+		assertNotNull(baseUser.getRoleList());
+		assertNotNull(baseUser.getRoleList().size());
+		assertEquals(baseUser.getRoleList().size(), 1);
+	}
 }

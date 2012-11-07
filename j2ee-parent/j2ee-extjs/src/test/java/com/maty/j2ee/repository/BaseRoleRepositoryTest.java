@@ -38,4 +38,15 @@ public class BaseRoleRepositoryTest extends Base {
 		assertEquals(baseRole.getRoleName(), "管理员");
 	}
 
+	@Test
+	public void testFindManyToMany() {
+		baseRole = repository.findOne(1L);
+		logger.info("role:{}", baseRole);
+		assertNotNull(baseRole);
+		assertNotNull(baseRole.getModuleList());
+		assertNotNull(baseRole.getModuleList().size());
+		assertEquals(baseRole.getModuleList().size(), 7);
+		assertEquals(baseRole.getRoleName(), "管理员");
+	}
+
 }
