@@ -1,4 +1,4 @@
-package com.maty.j2ee.repository;
+package com.maty.j2ee.service;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -14,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.maty.j2ee.Base;
 import com.maty.j2ee.entity.BaseUser;
+import com.maty.j2ee.repository.BaseUserRepository;
 import com.maty.j2ee.service.BaseUserService;
-import com.maty.j2ee.web.HomeController;
 
 public class BaseUserTest extends Base {
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BaseUserTest.class);
 	@Autowired
 	private BaseUserService userService;
 	@Autowired

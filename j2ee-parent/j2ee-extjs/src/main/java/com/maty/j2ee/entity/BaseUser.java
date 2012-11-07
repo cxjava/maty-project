@@ -21,11 +21,13 @@ public class BaseUser extends IdEntity {
 	private String account;
 	@NotBlank
 	private String password;
+	/** nick name */
 	private String realName;
 	private Integer sex;
 	private String email;
 	private String mobile;
 	private String officePhone;
+	/** count login error times */
 	private Integer errorCount;
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
@@ -64,7 +66,7 @@ public class BaseUser extends IdEntity {
 	}
 
 	/**
-	 * @return the realName
+	 * @return the realName nick name
 	 */
 	public String getRealName() {
 		return realName;
@@ -72,7 +74,7 @@ public class BaseUser extends IdEntity {
 
 	/**
 	 * @param realName
-	 *            the realName to set
+	 *            the realName to set nick name
 	 */
 	public void setRealName(String realName) {
 		this.realName = realName;
@@ -139,7 +141,7 @@ public class BaseUser extends IdEntity {
 	}
 
 	/**
-	 * @return the errorCount
+	 * @return the errorCount count login error times
 	 */
 	public Integer getErrorCount() {
 		return errorCount;
@@ -147,7 +149,7 @@ public class BaseUser extends IdEntity {
 
 	/**
 	 * @param errorCount
-	 *            the errorCount to set
+	 *            the errorCount to set count login error times
 	 */
 	public void setErrorCount(Integer errorCount) {
 		this.errorCount = errorCount;
