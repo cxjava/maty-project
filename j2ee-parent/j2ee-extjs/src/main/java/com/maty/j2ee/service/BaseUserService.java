@@ -1,18 +1,19 @@
 package com.maty.j2ee.service;
 
-import com.maty.j2ee.entity.User;
+import com.maty.j2ee.entity.BaseUser;
 
 /**
  * 用户业务接口
  */
-public interface UserService {
+public interface BaseUserService {
 
 	/**
 	 * 保存用户
 	 * 
 	 * @param user
+	 * @return 
 	 */
-	void saveUser(User user);
+	BaseUser saveUser(BaseUser user);
 
 	/**
 	 * 根据id查找用户
@@ -20,20 +21,20 @@ public interface UserService {
 	 * @param id
 	 * @return
 	 */
-	User findUserById(Integer id);
+	BaseUser findUserById(Long id);
 
 	/**
 	 * 更新用户
 	 * 
 	 * @param user
 	 */
-	void updateUser(User user);
+	void updateUser(BaseUser user);
 
 	/**
 	 * 根据ID删除用户
 	 * 
 	 * @param id
 	 */
-	void deleteUserById(Integer id);
+	void deleteUserById(Long id);
 
 }

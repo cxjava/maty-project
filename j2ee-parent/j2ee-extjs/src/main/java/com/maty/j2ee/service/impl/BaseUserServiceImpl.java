@@ -4,42 +4,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.maty.j2ee.entity.User;
-import com.maty.j2ee.repository.UserRepository;
-import com.maty.j2ee.service.UserService;
+import com.maty.j2ee.entity.BaseUser;
+import com.maty.j2ee.repository.BaseUserRepository;
+import com.maty.j2ee.service.BaseUserService;
 
 /**
  * 用户业务服务实现类
  * 
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class BaseUserServiceImpl implements BaseUserService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private BaseUserRepository userRepository;
 
 	@Override
 	@Transactional
-	public void saveUser(User user) {
-		userRepository.save(user);
-
+	public BaseUser saveUser(BaseUser user) {
+		return userRepository.save(user);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public User findUserById(Integer id) {
+	public BaseUser findUserById(Long id) {
 		return userRepository.findOne(id);
 	}
 
 	@Override
 	@Transactional
-	public void updateUser(User user) {
+	public void updateUser(BaseUser user) {
 		userRepository.save(user);
 	}
 
 	@Override
 	@Transactional
-	public void deleteUserById(Integer id) {
+	public void deleteUserById(Long id) {
 		userRepository.delete(id);
 	}
 
