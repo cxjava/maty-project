@@ -36,22 +36,22 @@ public class BaseUserRepositoryTest extends Base {
 
 	@Test
 	public void testFindOne() {
-		baseUser = repository.findOne(2L);
+		baseUser = repository.findOne(1L);
 		logger.info("user:{}", baseUser);
 		assertNotNull(baseUser);
-		assertEquals(baseUser.getAccount(), "admin");
+		assertEquals(baseUser.getAccount(), "test");
 	}
 
 	@Test
 	public void testFindManyToMany() {
-		baseUser = repository.findOne(2L);
+		baseUser = repository.findOne(1L);
 		logger.info("user:{}", baseUser);
 		assertNotNull(baseUser);
 		assertNotNull(baseUser.getRoleList());
 		assertNotNull(baseUser.getRoleList().get(0).getModuleList());
 		assertNotNull(baseUser.getRoleList().get(0).getModuleList().size());
 		assertNotNull(baseUser.getRoleList().size());
-		assertEquals(baseUser.getRoleList().get(0).getModuleList().size(),7);
+		assertEquals(baseUser.getRoleList().get(0).getModuleList().size(),2);
 		assertEquals(baseUser.getRoleList().size(), 1);
 	}
 }

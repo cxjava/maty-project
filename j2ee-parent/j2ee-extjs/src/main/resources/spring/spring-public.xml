@@ -86,11 +86,12 @@
 		</bean>
 	</beans>
 	
-	<!-- unit test环境 -->
-	<beans profile="test">
+	<!-- h2环境 -->
+	<beans profile="h2">
 		<context:property-placeholder ignore-resource-not-found="true"
-			location="classpath*:/jdbc.test.properties,classpath*:/config.properties" />
-			
+			location="classpath*:/jdbc.h2.properties,
+					  classpath*:/config.properties" />
+
 		<!-- 数据源配置, 使用应用中的Druid数据库连接池 -->
 		<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
 			<!-- Connection Info -->
@@ -102,9 +103,21 @@
 		
 		<!-- 初始化数据表结构 -->
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
-			<jdbc:script location="classpath:sql/h2/schema.sql" />
-			<!-- <jdbc:script location="classpath:data/import-data.sql" /> -->
-		</jdbc:initialize-database>	
+			<jdbc:script location="classpath:sql/h2/schema.sql" encoding="UTF-8" />
+			<jdbc:script location="classpath:sql/h2/data.sql"  encoding="UTF-8"/>
+		</jdbc:initialize-database>
+	</beans>
+	<!-- unit test环境 -->
+	<beans profile="test">
+		<context:property-placeholder ignore-resource-not-found="true"
+			location="classpath*:/jdbc.test.properties,
+					  classpath*:/config.properties" />
+
+		<!-- 初始化数据表结构 -->
+		<jdbc:embedded-database id="dataSource" type="H2">
+			<jdbc:script location="classpath:sql/h2/schema.sql" encoding="UTF-8" />
+			<jdbc:script location="classpath:sql/h2/data.sql"  encoding="UTF-8"/>
+		</jdbc:embedded-database>
 	</beans>
 	
 </beans>
