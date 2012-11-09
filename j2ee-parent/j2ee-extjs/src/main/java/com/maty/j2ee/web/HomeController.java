@@ -1,26 +1,35 @@
 package com.maty.j2ee.web;
 
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 主页面
  * 
- * @author chenxin
+ * @author Maty Chen
  * @date 2011-11-2 下午2:03:20
  */
 @Controller
 public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+	@Value("${reset.password}")
+	private String password;
 	/**
 	 * 主页
 	 */
 	@RequestMapping("/")
-	public String home() {
+	public String home(Locale locale, HttpServletResponse response) {
 		try {
+			logger.info(password);
+			response.setLocale(locale);
 			return "login";
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
