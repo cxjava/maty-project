@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,6 +24,10 @@ public class HomeController {
 
 	@Value("${reset.password}")
 	private String password;
+	
+	@Autowired
+	private MessageSource source;
+	
 	/**
 	 * 主页
 	 */
@@ -29,11 +35,12 @@ public class HomeController {
 	public String home(Locale locale, HttpServletResponse response) {
 		try {
 			logger.info(password);
+			logger.info(source.getMessage("login.page.title", null, locale));
 			response.setLocale(locale);
 			return "login";
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
-			return null;
+			return source.getMessage("login.page.title", null, locale);
 		}
 	}
 
