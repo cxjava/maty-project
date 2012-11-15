@@ -44,11 +44,11 @@
 				<value>classpath:/i18n/errors</value>
 			</list>
 		</property>
+		<property name="fallbackToSystemLocale" value="false"/>
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
-    	<!-- <property name="defaultLocale" value="en_US" /> -->
     	<property name="cookieName" value="lang"/>
 	</bean>
 	
