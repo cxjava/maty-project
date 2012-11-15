@@ -21,7 +21,7 @@ public class BaseModuleRepositoryTest extends Base {
 	public void before() {
 		baseModule = new BaseModule();
 		baseModule.setModuleName("module name");
-		baseModule.setParentUrl(2L);
+		baseModule.setParentId(2L);
 	}
 
 	@Test

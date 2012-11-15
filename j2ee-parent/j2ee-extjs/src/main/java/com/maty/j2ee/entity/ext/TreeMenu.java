@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.maty.j2ee.entity.BaseModule;
 
 /**
@@ -40,7 +41,7 @@ public class TreeMenu implements Serializable {
 			return tree;
 		}
 		if (hasChild(list, node)) {
-			List<Tree> lt = new ArrayList<Tree>();
+			List<Tree> lt = Lists.newArrayList();
 			tree.setUrl("");
 			tree.setLeaf(node.getLeaf() == 1 ? true : false);
 			tree.setExpanded(node.getExpanded() == 1 ? true : false);
@@ -52,12 +53,6 @@ public class TreeMenu implements Serializable {
 				lt.add(getNodeJson(list, modules));
 			}
 			tree.setChildren(lt);
-			// } else if ((node.getParentId() == root.getModuleId()) ||
-			// node.getModuleUrl() == null) {
-			// // 防止是主菜单,或者主菜单里面的url为空，但是下面没有子菜单的时候
-			// tree.setUrl("");
-			// tree.setLeaf(node.getLeaf() == 1 ? true : false);
-			// tree.setExpanded(node.getExpanded() == 1 ? true : false);
 		} else {
 			tree.setUrl(node.getModuleUrl());
 			tree.setLeaf(node.getLeaf() == 1 ? true : false);
@@ -77,11 +72,11 @@ public class TreeMenu implements Serializable {
 	 * 得到子节点列表
 	 */
 	private List<BaseModule> getChildList(List<BaseModule> list, BaseModule modules) {
-		List<BaseModule> li = new ArrayList<BaseModule>();
+		List<BaseModule> li = Lists.newArrayList();
 		Iterator<BaseModule> it = list.iterator();
 		while (it.hasNext()) {
 			BaseModule temp = it.next();
-			if (modules.getId().equals(temp.getParentUrl())) {
+			if (modules.getId().equals(temp.getParentId())) {
 				li.add(temp);
 			}
 		}

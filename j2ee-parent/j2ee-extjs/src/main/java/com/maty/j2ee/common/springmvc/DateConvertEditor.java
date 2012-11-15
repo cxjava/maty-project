@@ -52,7 +52,7 @@ public class DateConvertEditor extends PropertyEditorSupport {
 			try {
 				setValue(this.format.parse(text));
 			} catch (ParseException e) {
-				throw new IllegalArgumentException("不能被转换的日期字符串，请检查!", e);
+				throw new IllegalArgumentException("Cannot be conversion date string, please check!", e);
 			}
 		}
 	}

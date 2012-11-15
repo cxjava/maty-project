@@ -15,11 +15,11 @@
 
 
 --
--- Create schema j2ee
+-- Create schema authority
 --
 
-CREATE DATABASE IF NOT EXISTS j2ee;
-USE j2ee;
+CREATE DATABASE IF NOT EXISTS authority;
+USE authority;
 
 --
 -- Definition of table `t_base_field`

@@ -8,6 +8,9 @@ package com.maty.j2ee.entity.ext;
  */
 public class Table {
 
+	protected Table() {
+	}
+
 	/**
 	 * 把pojo字段转为数据库字段<br>
 	 * fileName -> FILE_NAME
