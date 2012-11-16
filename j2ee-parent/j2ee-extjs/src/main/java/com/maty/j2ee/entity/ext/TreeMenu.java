@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import com.maty.j2ee.entity.BaseModule;
 
 /**
- * 菜单类1.1
+ * tree menu
  * 
  * @author Maty Chen
  * @date 2011-10-25 下午9:53:59
@@ -19,13 +19,16 @@ public class TreeMenu implements Serializable {
 	private List<BaseModule> list;
 	private BaseModule root;
 
+	/**
+	 * @param list
+	 */
 	public TreeMenu(List<BaseModule> list) {
 		this.list = list;
 		this.root = new BaseModule();
 	}
 
 	/**
-	 * 组合json
+	 * get the json
 	 * 
 	 * @param list
 	 * @param node
@@ -83,6 +86,9 @@ public class TreeMenu implements Serializable {
 		return li;
 	}
 
+	/**
+	 * @return get the finally tree
+	 */
 	public Tree getTreeJson() {
 		// 父菜单的id为0
 		this.root.setId(0L);

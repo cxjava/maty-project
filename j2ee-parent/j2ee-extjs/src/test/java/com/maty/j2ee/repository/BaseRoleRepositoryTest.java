@@ -43,9 +43,6 @@ public class BaseRoleRepositoryTest extends Base {
 		baseRole = repository.findOne(1L);
 		logger.info("role:{}", baseRole);
 		assertNotNull(baseRole);
-		assertNotNull(baseRole.getModuleList());
-		assertNotNull(baseRole.getModuleList().size());
-		assertEquals(baseRole.getModuleList().size(), 7);
 		assertEquals(baseRole.getRoleName(), "管理员");
 	}
 

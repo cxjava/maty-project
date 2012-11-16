@@ -4,44 +4,24 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * 系统字段设置表
+ * field table
  */
 @Entity
 @Table(name = "t_base_field")
 public class BaseField extends IdEntity {
 
-	/**
-	 * 字段
-	 */
 	private String field;
-
-	/**
-	 * 字段名称
-	 */
 	private String fieldName;
-
-	/**
-	 * 字段值
-	 */
+	/** field value */
 	private String valueField;
-
-	/**
-	 * 字段显示值
-	 */
+	/** field display value */
 	private String displayField;
-
-	/**
-	 * 是否启用
-	 */
+	/** is enabled */
 	private Integer enabled;
-
-	/**
-	 * 排序
-	 */
 	private Integer sort;
 
 	/**
-	 * @return 字段
+	 * @return the field
 	 */
 	public String getField() {
 		return field;
@@ -49,14 +29,14 @@ public class BaseField extends IdEntity {
 
 	/**
 	 * @param field
-	 *            字段
+	 *            the field to set
 	 */
 	public void setField(String field) {
 		this.field = field;
 	}
 
 	/**
-	 * @return 字段名称
+	 * @return the fieldName
 	 */
 	public String getFieldName() {
 		return fieldName;
@@ -64,14 +44,14 @@ public class BaseField extends IdEntity {
 
 	/**
 	 * @param fieldName
-	 *            字段名称
+	 *            the fieldName to set
 	 */
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
 	}
 
 	/**
-	 * @return 字段值
+	 * @return the valueField field value
 	 */
 	public String getValueField() {
 		return valueField;
@@ -79,14 +59,14 @@ public class BaseField extends IdEntity {
 
 	/**
 	 * @param valueField
-	 *            字段值
+	 *            the valueField to set field value
 	 */
 	public void setValueField(String valueField) {
 		this.valueField = valueField;
 	}
 
 	/**
-	 * @return 字段显示值
+	 * @return the displayField field display value
 	 */
 	public String getDisplayField() {
 		return displayField;
@@ -94,14 +74,14 @@ public class BaseField extends IdEntity {
 
 	/**
 	 * @param displayField
-	 *            字段显示值
+	 *            the displayField to set field display value
 	 */
 	public void setDisplayField(String displayField) {
 		this.displayField = displayField;
 	}
 
 	/**
-	 * @return 是否启用
+	 * @return the enabled is enabled
 	 */
 	public Integer getEnabled() {
 		return enabled;
@@ -109,14 +89,14 @@ public class BaseField extends IdEntity {
 
 	/**
 	 * @param enabled
-	 *            是否启用
+	 *            the enabled to set is enabled
 	 */
 	public void setEnabled(Integer enabled) {
 		this.enabled = enabled;
 	}
 
 	/**
-	 * @return 排序
+	 * @return the sort
 	 */
 	public Integer getSort() {
 		return sort;
@@ -124,7 +104,7 @@ public class BaseField extends IdEntity {
 
 	/**
 	 * @param sort
-	 *            排序
+	 *            the sort to set
 	 */
 	public void setSort(Integer sort) {
 		this.sort = sort;

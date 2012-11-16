@@ -56,12 +56,17 @@ public class BaseModule extends IdEntity {
 		this.moduleUrl = moduleUrl;
 	}
 
-	
-
+	/**
+	 * @return the parentId
+	 */
 	public Long getParentId() {
 		return parentId;
 	}
 
+	/**
+	 * @param parentId
+	 *            the parentId to set
+	 */
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}

@@ -12,7 +12,7 @@ public class Table {
 	}
 
 	/**
-	 * 把pojo字段转为数据库字段<br>
+	 * change the pojo column to database column<br>
 	 * fileName -> FILE_NAME
 	 * 
 	 * @param field

@@ -1,5 +1,8 @@
 package com.maty.j2ee.entity;
 
+/**
+ * dynamic get all search data
+ */
 public class SearchFilter {
 
 	public enum Operator {
@@ -10,12 +13,25 @@ public class SearchFilter {
 	private Object value;
 	private Operator operator;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param fieldName
+	 * @param operator
+	 * @param value
+	 */
 	public SearchFilter(String fieldName, Operator operator, Object value) {
 		this.fieldName = fieldName;
 		this.value = value;
 		this.operator = operator;
 	}
 
+	/**
+	 * Default operator is EQ
+	 * 
+	 * @param fieldName
+	 * @param value
+	 */
 	public SearchFilter(String fieldName, Object value) {
 		this.fieldName = fieldName;
 		this.value = value;
