@@ -12,27 +12,43 @@ public class ServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = 3583566093089790852L;
 
-	/** 错误代码，配置在国际化资源文件中，通过MessageSource.getMessage(errorCode, null, locale)得到 */
+	/** error code，config in the i18n file，use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user */
 	private String errorCode;
 
 	public ServiceException() {
 		super();
 	}
 
+	/**
+	 * @param message
+	 */
 	public ServiceException(String message) {
 		super(message);
 	}
 
+	/**
+	 * @param message
+	 * @param errorCode use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
+	 */
 	public ServiceException(String message, String errorCode) {
 		super(message);
 		this.errorCode = errorCode;
 	}
 
+	/**
+	 * @param cause
+	 * @param errorCode use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
+	 */
 	public ServiceException(Throwable cause, String errorCode) {
 		super(cause);
 		this.errorCode = errorCode;
 	}
 
+	/**
+	 * @param message
+	 * @param cause
+	 * @param errorCode use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
+	 */
 	public ServiceException(String message, Throwable cause, String errorCode) {
 		super(message, cause);
 		this.errorCode = errorCode;
@@ -40,8 +56,7 @@ public class ServiceException extends RuntimeException {
 
 	/**
 	 * @return the errorCode
-	 *         错误代码，配置在国际化资源文件中，通过MessageSource.getMessage(errorCode, null,
-	 *         locale)得到
+	 *         use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
 	 */
 	public String getErrorCode() {
 		return errorCode;

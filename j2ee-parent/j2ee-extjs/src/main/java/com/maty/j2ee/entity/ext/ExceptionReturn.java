@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 
 /**
- * Ext 异常返回对象
+ * Ext exception return object
  * 
  * @author Maty Chen
  * @date 2011-10-11 下午12:56:56
@@ -14,14 +14,16 @@ public class ExceptionReturn implements Serializable {
 
 	private static final long serialVersionUID = 9087824523427593553L;
 
+	/**
+	 * constructor
+	 */
 	public ExceptionReturn() {
 	}
 
 	/**
-	 * 异常时的构造方法
 	 * 
 	 * @param msg
-	 *            异常消息
+	 *            exception
 	 */
 	public ExceptionReturn(Throwable exceptionMessage) {
 		StringWriter sw = new StringWriter();
@@ -33,27 +35,37 @@ public class ExceptionReturn implements Serializable {
 		this.exceptionMessage = exceptionMessage.getMessage();
 	}
 
-	/**
-	 * 是否成功
-	 */
+	/** is success */
 	private boolean success;
-	/**
-	 * 异常的消息
-	 */
+	/** exception message */
 	private Object exceptionMessage;
 
+	/**
+	 * @return the success is success
+	 */
 	public boolean isSuccess() {
 		return success;
 	}
 
+	/**
+	 * @param success
+	 *            the success to set is success
+	 */
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
 
+	/**
+	 * @return the exceptionMessage exception message
+	 */
 	public Object getExceptionMessage() {
 		return exceptionMessage;
 	}
 
+	/**
+	 * @param exceptionMessage
+	 *            the exceptionMessage to set exception message
+	 */
 	public void setExceptionMessage(Object exceptionMessage) {
 		this.exceptionMessage = exceptionMessage;
 	}

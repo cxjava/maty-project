@@ -12,6 +12,9 @@ public class ExtReturn implements Serializable {
 
 	private static final long serialVersionUID = 4434330175390793196L;
 
+	/**
+	 * Constructor
+	 */
 	public ExtReturn() {
 	}
 

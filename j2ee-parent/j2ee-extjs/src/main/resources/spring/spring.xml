@@ -32,8 +32,8 @@
 		<property name="jpaProperties">
 			<props>
 				<!-- 命名规则 My_NAME->MyName -->
-				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+				<prop key="hibernate.show_sql">true</prop>
 			</props>
 		</property>
 	</bean>
@@ -118,7 +118,6 @@
 					  classpath*:/config.properties" />
 		<!-- 数据源配置, 使用应用中的Druid数据库连接池 -->
 		<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
-			<!-- Connection Info -->
 			<property name="driverClassName" value="${jdbc.driver}" />
 			<property name="url" value="${jdbc.url}" />
 			<property name="username" value="${jdbc.username}" />

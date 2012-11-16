@@ -27,6 +27,10 @@ import com.google.common.collect.Maps;
 import com.maty.j2ee.entity.SearchFilter;
 import com.maty.j2ee.entity.ext.ExtPager;
 
+/**
+ * common methods for jpa
+ * 
+ */
 public class JpaTools {
 	/** type conversion */
 	private static final ConversionService CONVERSION_SERVICE = new DefaultConversionService();
@@ -147,8 +151,6 @@ public class JpaTools {
 
 					List<Predicate> predicates = Lists.newArrayList();
 					for (SearchFilter filter : filters) {
-						// deal with this condition:parameters.put("DIStINCT",
-						// Any Object);
 						if (filter.getOperator().equals(SearchFilter.Operator.DISTINCT)) {
 							query.distinct(true);
 							continue;

@@ -27,10 +27,18 @@ import org.apache.commons.lang3.StringUtils;
 public class DateConvertEditor extends PropertyEditorSupport {
 	private DateFormat format;
 
+	/**
+	 * default is "yyyy-MM-dd HH:mm:ss"
+	 */
 	public DateConvertEditor() {
 		this.format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
+	/**
+	 * define by user
+	 * 
+	 * @param format
+	 */
 	public DateConvertEditor(String format) {
 		this.format = new SimpleDateFormat(format);
 	}
@@ -38,7 +46,7 @@ public class DateConvertEditor extends PropertyEditorSupport {
 	/** Date -> String */
 	@Override
 	public String getAsText() {
-		if (getValue() == null){
+		if (getValue() == null) {
 			return "";
 		}
 		return this.format.format(getValue());
@@ -46,7 +54,7 @@ public class DateConvertEditor extends PropertyEditorSupport {
 
 	/** String -> Date */
 	@Override
-	public void setAsText(String text){
+	public void setAsText(String text) {
 		if (!StringUtils.isNotBlank(text)) {
 			setValue(null);
 		} else {

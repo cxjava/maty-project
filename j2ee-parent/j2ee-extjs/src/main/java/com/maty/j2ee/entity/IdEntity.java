@@ -20,16 +20,25 @@ public abstract class IdEntity {
 
 	private Long id;
 
+	/**
+	 * @return id
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

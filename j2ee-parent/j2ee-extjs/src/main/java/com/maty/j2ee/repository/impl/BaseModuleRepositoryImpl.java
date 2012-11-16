@@ -11,6 +11,10 @@ import javax.persistence.criteria.Root;
 import com.maty.j2ee.entity.BaseModule;
 import com.maty.j2ee.repository.BaseModuleRepositoryDao;
 
+/**
+ * @author Maty Chen
+ *
+ */
 public class BaseModuleRepositoryImpl implements BaseModuleRepositoryDao {
 	@PersistenceContext
 	private EntityManager em;
