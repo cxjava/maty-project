@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.maty.j2ee.service.ServiceException;
+
 /**
  * 主页面
  * 
@@ -24,10 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class HomeController {
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
-	@Value("${reset.password}")
-	private String password;
 	@Value("${avail.languages:en_US,de_DE,zh_CN}")
 	private String availLanguages;
 
@@ -38,30 +38,25 @@ public class HomeController {
 	 * 主页
 	 */
 	@RequestMapping("/")
-	public String home(HttpServletRequest request, HttpServletResponse response, Locale locale,Model model) {
+	public String home(HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) {
 		try {
-			logger.info(availLanguages);
-			logger.info(locale.toString());
-			//judge the locale is in the default languages.
-			if(!ArrayUtils.contains(StringUtils.split(availLanguages, ','),locale.toString())){
-				model.addAttribute("language",StringUtils.split(availLanguages, ',')[0]);
-			}else{
-				model.addAttribute("language",locale.toString());
+			LOGGER.debug(availLanguages);
+			LOGGER.debug(locale.toString());
+			// judge the locale is in the default languages.
+			if (!ArrayUtils.contains(StringUtils.split(availLanguages, ','), locale.toString())) {
+				model.addAttribute("language", StringUtils.split(availLanguages, ',')[0]);
+			} else {
+				model.addAttribute("language", locale.toString());
 			}
 			return "login";
-		} catch (Exception e) {
-			logger.error("Exception: ", e);
-			return source.getMessage("login.page.title", null, locale);
+		} catch (ServiceException e) {
+			LOGGER.error(WebConstants.SERVICE_EXCEPTION, e);
+			if (StringUtils.hasText(e.getErrorCode())) {
+				return source.getMessage(e.getErrorCode(), null, locale);
+			} else {
+				return "";
+			}
 		}
-	}
-
-	/**
-	 * 主页
-	 */
-	@RequestMapping("/1")
-	public String home1() {
-		// 转到登录页面
-		return "login1";
 	}
 
 	/**
@@ -70,21 +65,5 @@ public class HomeController {
 	@RequestMapping("/main")
 	public String main() {
 		return "main";
-	}
-
-	/**
-	 * 头部
-	 */
-	@RequestMapping("/header")
-	public String header() {
-		return "header";
-	}
-
-	/**
-	 * 欢迎界面
-	 */
-	@RequestMapping("/welcome")
-	public String welcome() {
-		return "welcome";
 	}
 }

@@ -28,21 +28,25 @@ import com.maty.j2ee.entity.SearchFilter;
 import com.maty.j2ee.entity.ext.ExtPager;
 
 public class JpaTools {
-	private static final ConversionService conversionService = new DefaultConversionService();
-	protected JpaTools(){}
+	/** type conversion */
+	private static final ConversionService CONVERSION_SERVICE = new DefaultConversionService();
+
+	protected JpaTools() {
+	}
+
 	/**
 	 * create page request
 	 * 
 	 * @param pager
 	 *            extjs object
 	 * @param define
-	 *            " field desc ,sort asc "
+	 *            for example：" field desc ,sort asc "
 	 * @return
 	 */
 	public static PageRequest getPageRequest(ExtPager pager, String define) {
-		if(null==pager.getLimit()||null==pager.getStart()){
+		if (null == pager.getLimit() || null == pager.getStart()) {
 			return new PageRequest(0, Integer.MAX_VALUE, JpaTools.getSort(pager, define));
-		}else{
+		} else {
 			return new PageRequest(Integer.valueOf(pager.getStart() / pager.getLimit()), pager.getLimit(), JpaTools.getSort(pager, define));
 		}
 	}
@@ -50,9 +54,10 @@ public class JpaTools {
 	/**
 	 * long sort string
 	 * 
+	 * @param pager
 	 * @param define
 	 *            " field DESC ,sort ASC "
-	 * @return
+	 * @return sort
 	 */
 	public static Sort getSort(ExtPager pager, String define) {
 		Sort sort = null;
@@ -77,7 +82,10 @@ public class JpaTools {
 	 * map to searchFilter
 	 * 
 	 * @param searchParams
-	 *            key->EQ_userName key->LIKE_title
+	 *            <p>
+	 *            key->EQ_userName key->LIKE_title;
+	 *            <p>
+	 *            parameters.put("DIStINCT", Any Object);
 	 * @return
 	 */
 	public static Map<String, SearchFilter> parse(Map<String, Object> searchParams) {
@@ -94,7 +102,6 @@ public class JpaTools {
 			if (names.length == 2) {
 				filter = new SearchFilter(names[1], SearchFilter.Operator.valueOf(names[0].toUpperCase(Locale.US)), value);
 			} else if (names.length == 1) {
-				//deal with this condition:parameters.put("DIStINCT", Any Object);
 				if ("DISTINCT".equalsIgnoreCase(names[0])) {
 					filter = new SearchFilter(names[0], SearchFilter.Operator.DISTINCT, names[0]);
 				} else {
@@ -109,10 +116,28 @@ public class JpaTools {
 		return filters;
 	}
 
+	/**
+	 * @param parameters
+	 *            <p>
+	 *            key->EQ_userName key->LIKE_title;
+	 *            <p>
+	 *            parameters.put("DIStINCT", Any Object);
+	 * @param clazz
+	 *            object class
+	 */
 	public static <T> Specification<T> getSpecification(Map<String, Object> parameters, final Class<T> clazz) {
 		return JpaTools.getSpecification(JpaTools.parse(parameters).values(), clazz);
 	}
 
+	/**
+	 * @param filters
+	 *            <p>
+	 *            key->EQ_userName key->LIKE_title;
+	 *            <p>
+	 *            parameters.put("DIStINCT", Any Object);
+	 * @param clazz
+	 *            object class
+	 */
 	public static <T> Specification<T> getSpecification(final Collection<SearchFilter> filters, final Class<T> clazz) {
 		return new Specification<T>() {
 			@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -122,7 +147,8 @@ public class JpaTools {
 
 					List<Predicate> predicates = Lists.newArrayList();
 					for (SearchFilter filter : filters) {
-						//deal with this condition:parameters.put("DIStINCT", Any Object);
+						// deal with this condition:parameters.put("DIStINCT",
+						// Any Object);
 						if (filter.getOperator().equals(SearchFilter.Operator.DISTINCT)) {
 							query.distinct(true);
 							continue;
@@ -138,8 +164,8 @@ public class JpaTools {
 						// convert value from string to target type
 						Class attributeClass = expression.getJavaType();
 						if (!attributeClass.equals(String.class) && filter.getValue() instanceof String
-								&& conversionService.canConvert(String.class, attributeClass)) {
-							filter.setValue(conversionService.convert(filter.getValue(), attributeClass));
+								&& CONVERSION_SERVICE.canConvert(String.class, attributeClass)) {
+							filter.setValue(CONVERSION_SERVICE.convert(filter.getValue(), attributeClass));
 						}
 
 						// logic operator

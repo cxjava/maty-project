@@ -38,14 +38,15 @@ public class DateConvertEditor extends PropertyEditorSupport {
 	/** Date -> String */
 	@Override
 	public String getAsText() {
-		if (getValue() == null)
+		if (getValue() == null){
 			return "";
+		}
 		return this.format.format(getValue());
 	}
 
 	/** String -> Date */
 	@Override
-	public void setAsText(String text) throws IllegalArgumentException {
+	public void setAsText(String text){
 		if (!StringUtils.isNotBlank(text)) {
 			setValue(null);
 		} else {

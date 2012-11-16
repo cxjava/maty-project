@@ -8,7 +8,7 @@ import com.maty.j2ee.entity.BaseUser;
 
 public interface BaseUserRepository extends PagingAndSortingRepository<BaseUser, Long> {
 
-	public List<BaseUser> findByAccount(String account);
+	List<BaseUser> findByAccount(String account);
 
 	List<BaseUser> findByAccountAndRealName(String account, String realName);
 

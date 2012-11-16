@@ -39,7 +39,7 @@ public class BaseUserRepositoryTest extends Base {
 		baseUser = repository.findOne(1L);
 		logger.info("user:{}", baseUser);
 		assertNotNull(baseUser);
-		assertEquals(baseUser.getAccount(), "test");
+		assertEquals(baseUser.getAccount(), "admin");
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class BaseUserRepositoryTest extends Base {
 		assertNotNull(baseUser.getRoleList().get(0).getModuleList());
 		assertNotNull(baseUser.getRoleList().get(0).getModuleList().size());
 		assertNotNull(baseUser.getRoleList().size());
-		assertEquals(baseUser.getRoleList().get(0).getModuleList().size(),2);
+		assertEquals(baseUser.getRoleList().get(0).getModuleList().size(),7);
 		assertEquals(baseUser.getRoleList().size(), 1);
 	}
 }
