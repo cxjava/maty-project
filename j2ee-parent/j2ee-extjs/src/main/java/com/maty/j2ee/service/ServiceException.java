@@ -15,6 +15,9 @@ public class ServiceException extends RuntimeException {
 	/** error code，config in the i18n file，use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user */
 	private String errorCode;
 
+	/**
+	 * constructor
+	 */
 	public ServiceException() {
 		super();
 	}
