@@ -42,8 +42,9 @@ public class HomeController {
 		try {
 			logger.info(availLanguages);
 			logger.info(locale.toString());
+			//judge the locale is in the default languages.
 			if(!ArrayUtils.contains(StringUtils.split(availLanguages, ','),locale.toString())){
-				model.addAttribute("language","en_US");
+				model.addAttribute("language",StringUtils.split(availLanguages, ',')[0]);
 			}else{
 				model.addAttribute("language",locale.toString());
 			}

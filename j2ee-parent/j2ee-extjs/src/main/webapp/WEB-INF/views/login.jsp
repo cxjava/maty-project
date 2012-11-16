@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -28,12 +27,10 @@ body {
 </head>
 
 <body>
-	<div align="right" style="margin-right: 20px;height: 14px;width: ">
+	<div align="right" style="margin-right: 20px;height: 14px;">
 		<a href="?locale=zh_CN">中文</a>
 		<a href="?locale=en_US">English</a>
 		<a href="?locale=de_DE">Deutsch</a>
-		<a href="?locale=de">Deutsch</a>
-		${language}
 	</div>
 
 	<div id="loading">
@@ -50,7 +47,7 @@ body {
 		</div>
 	</div>
 	<script type="text/javascript">
-	!(function () { 
+	!(function () {
 		function loadProgress(id, percent) {
 			var bar = document.getElementById(id);
 			return {
