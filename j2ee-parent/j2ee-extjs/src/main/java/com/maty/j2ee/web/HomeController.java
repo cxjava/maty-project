@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.maty.j2ee.service.ServiceException;
 
 /**
- * 主页面
+ * contains main page
  * 
- * @author Maty Chen
- * @date 2011-11-2 下午2:03:20
  */
 @Controller
 public class HomeController {
@@ -35,15 +33,14 @@ public class HomeController {
 	private MessageSource source;
 
 	/**
-	 * 主页
+	 * main
 	 */
 	@RequestMapping("/")
 	public String home(HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) {
 		try {
-			LOGGER.debug(availLanguages);
-			LOGGER.debug(locale.toString());
 			// judge the locale is in the default languages.
 			if (!ArrayUtils.contains(StringUtils.split(availLanguages, ','), locale.toString())) {
+				//get the first language from configuration file as a default language
 				model.addAttribute("language", StringUtils.split(availLanguages, ',')[0]);
 			} else {
 				model.addAttribute("language", locale.toString());
