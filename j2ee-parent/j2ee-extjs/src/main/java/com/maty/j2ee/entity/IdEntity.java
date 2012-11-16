@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @MappedSuperclass
 public abstract class IdEntity {
 
-	protected Long id;
+	private Long id;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

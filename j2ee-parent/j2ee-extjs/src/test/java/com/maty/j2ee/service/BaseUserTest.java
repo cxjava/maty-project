@@ -54,29 +54,4 @@ public class BaseUserTest extends Base {
 		assertEquals(users.size(), 1);
 	}
 
-	@Test
-	public void testFindByAccountAndName() {
-		user = userRepository.save(user);
-		List<BaseUser> users = userRepository.findByAccountAndRealName("LiHuai", "李坏");
-		assertFalse(users.isEmpty());
-		assertThat(users.get(0), is(user));
-		assertEquals(users.get(0).getAccount(), "LiHuai");
-	}
-
-	@Test
-	public void testFindByAccountAndNameIgnoreCase() {
-		user = userRepository.save(user);
-		List<BaseUser> users = userRepository.findByAccountIgnoreCaseAndRealName("LIHUAI", "李坏");
-		assertFalse(users.isEmpty());
-		assertThat(users.get(0), is(user));
-	}
-
-	@Test
-	public void testFindByAccountAndNameOrPassword() {
-		user = userRepository.save(user);
-		List<BaseUser> users = userRepository.findByAccountAndRealNameOrPassword("LiHuai", "李坏", "123");
-		assertFalse(users.isEmpty());
-		assertThat(users.get(0), is(user));
-		assertEquals(users.get(0).getAccount(), "LiHuai");
-	}
 }

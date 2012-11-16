@@ -6,5 +6,5 @@ package com.maty.j2ee.web;
  */
 public interface WebConstants {
 	/** ServiceException */
-	static final String SERVICE_EXCEPTION = "ServiceException: ";
+	final String SERVICE_EXCEPTION = "ServiceException: ";
 }
