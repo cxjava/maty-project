@@ -7,13 +7,13 @@
 
 	<!-- Shiro's main business-tier object for web-enabled applications -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="shiroDbRealm" />
+		<property name="realm" ref="shiroRealm" />
 		<property name="cacheManager" ref="shiroEhcacheManager" />
 	</bean>
 
 	<!-- 項目自定义的Realm, 所有accountService依赖的dao都需要用depends-on声明 -->
-	<bean id="shiroDbRealm" class="org.springside.examples.quickstart.service.account.ShiroDbRealm" depends-on="userDao,taskDao">
-		<property name="accountService" ref="accountService"/>
+	<bean id="shiroRealm" class="com.maty.j2ee.service.ShiroRealm" depends-on="baseUserRepository">
+		<property name="baseUserService" ref="baseUserServiceImpl"/>
 	</bean>
 	
 	<!-- Shiro Filter -->
@@ -25,9 +25,7 @@
 			<value>
 				/login = authc
 				/logout = logout
-				/static/** = anon
-				/api/** = anon
-				/register/** = anon
+				/resources/** = anon
 				/admin/** = roles[admin]
 				/** = user
 			</value>
@@ -41,4 +39,12 @@
 	
 	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	
+	<!-- AOP式方法级权限检查  -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    	<property name="securityManager" ref="securityManager"/>
+	</bean>
 </beans>

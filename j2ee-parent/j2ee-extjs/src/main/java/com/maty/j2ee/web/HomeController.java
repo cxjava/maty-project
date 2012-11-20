@@ -24,8 +24,7 @@ import com.maty.j2ee.service.ServiceException;
  */
 @Controller
 public class HomeController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
-
+	private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
 	@Value("${avail.languages:en_US,de_DE,zh_CN}")
 	private String availLanguages;
 
@@ -40,19 +39,24 @@ public class HomeController {
 		try {
 			// judge the locale is in the default languages.
 			if (!ArrayUtils.contains(StringUtils.split(availLanguages, ','), locale.toString())) {
-				//get the first language from configuration file as a default language
+				// get the first language from configuration file as a default
+				// language
+				LOG.warn("user default language is {},it's not in support group.", locale.toString());
 				model.addAttribute("language", StringUtils.split(availLanguages, ',')[0]);
 			} else {
 				model.addAttribute("language", locale.toString());
 			}
-			return "login";
+			return "index";
 		} catch (ServiceException e) {
-			LOGGER.error(WebConstants.SERVICE_EXCEPTION, e);
+			LOG.error(WebConstants.SERVICE_EXCEPTION, e);
 			if (StringUtils.hasText(e.getErrorCode())) {
 				return source.getMessage(e.getErrorCode(), null, locale);
 			} else {
 				return "";
 			}
+		} catch (Exception e) {
+			LOG.error(WebConstants.EXCEPTION, e);
+			return "";
 		}
 	}
 

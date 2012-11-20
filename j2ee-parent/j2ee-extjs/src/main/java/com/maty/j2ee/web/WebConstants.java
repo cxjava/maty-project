@@ -7,4 +7,6 @@ package com.maty.j2ee.web;
 public interface WebConstants {
 	/** ServiceException */
 	String SERVICE_EXCEPTION = "ServiceException: ";
+	/** Exception */
+	String EXCEPTION = "Exception: ";
 }

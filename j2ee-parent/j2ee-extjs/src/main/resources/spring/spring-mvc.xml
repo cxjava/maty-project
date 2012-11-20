@@ -71,4 +71,23 @@
 		<!-- 一个类似懒加载的属性.可以定义该属性.让解析文件的时候再抛异常,然后Controller中定义异常处理的方法 -->
 		<property name="resolveLazily" value="true" />
 	</bean>
+	
+	
+	<!-- 支持 Shiro对Controller的方法级AOP安全控制 begin-->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    	<property name="securityManager" ref="securityManager"/>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+		<property name="exceptionMappings">  
+			<props>  
+				<prop key="org.springframework.validation.BindException">error/400</prop>
+				<prop key="org.apache.shiro.authz.UnauthorizedException">error/403</prop>  
+            </props>  
+		</property>  
+    </bean> 
 </beans>

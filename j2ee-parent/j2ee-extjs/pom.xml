@@ -26,10 +26,6 @@
 			<artifactId>log4jdbc-remix</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springside</groupId>
-			<artifactId>springside-core</artifactId>
-		</dependency>
 		<!-- AOP begin -->
 		<dependency>
 			<groupId>org.aspectj</groupId>

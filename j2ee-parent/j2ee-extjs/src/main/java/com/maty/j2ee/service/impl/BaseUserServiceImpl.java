@@ -9,37 +9,19 @@ import com.maty.j2ee.repository.BaseUserRepository;
 import com.maty.j2ee.service.BaseUserService;
 
 /**
- * 用户业务服务实现类
+ * user implement
  * 
  */
 @Service
+@Transactional(readOnly = true)
 public class BaseUserServiceImpl implements BaseUserService {
 
 	@Autowired
 	private BaseUserRepository userRepository;
 
 	@Override
-	@Transactional
-	public BaseUser saveUser(BaseUser user) {
-		return userRepository.save(user);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public BaseUser findUserById(Long id) {
-		return userRepository.findOne(id);
-	}
-
-	@Override
-	@Transactional
-	public void updateUser(BaseUser user) {
-		userRepository.save(user);
-	}
-
-	@Override
-	@Transactional
-	public void deleteUserById(Long id) {
-		userRepository.delete(id);
+	public BaseUser findUserByLoginName(String account) {
+		return userRepository.findByAccount(account);
 	}
 
 }

@@ -9,7 +9,7 @@ import com.maty.j2ee.entity.BaseUser;
 
 public interface BaseUserRepository extends PagingAndSortingRepository<BaseUser, Long>, JpaSpecificationExecutor<BaseUser> {
 
-	List<BaseUser> findByAccount(String account);
+	BaseUser findByAccount(String account);
 	
 	List<BaseUser> findByAccountAndEmail(String account,String email);
 
