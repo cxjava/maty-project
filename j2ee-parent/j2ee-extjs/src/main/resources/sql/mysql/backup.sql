@@ -15,11 +15,11 @@
 
 
 --
--- Create schema authority
+-- Create schema j2ee
 --
 
-CREATE DATABASE IF NOT EXISTS authority;
-USE authority;
+CREATE DATABASE IF NOT EXISTS j2ee;
+USE j2ee;
 
 --
 -- Definition of table `t_base_field`
@@ -119,6 +119,30 @@ INSERT INTO `t_base_module` (`id`,`module_name`,`module_url`,`parent_id`,`leaf`,
 
 
 --
+-- Definition of table `t_base_permission`
+--
+
+DROP TABLE IF EXISTS `t_base_permission`;
+CREATE TABLE `t_base_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `value` varchar(100) NOT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `t_base_permission`
+--
+
+/*!40000 ALTER TABLE `t_base_permission` DISABLE KEYS */;
+INSERT INTO `t_base_permission` (`id`,`name`,`value`,`remark`) VALUES 
+ (1,'用户删除','user:delete','删除用户操作'),
+ (2,'用户添加','user:add','添加用户');
+/*!40000 ALTER TABLE `t_base_permission` ENABLE KEYS */;
+
+
+--
 -- Definition of table `t_base_role`
 --
 
@@ -150,11 +174,7 @@ CREATE TABLE `t_base_role_module` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '角色模块ID',
   `role_id` int(10) unsigned DEFAULT NULL COMMENT '角色ID',
   `module_id` int(10) unsigned DEFAULT NULL COMMENT '模块ID',
-  PRIMARY KEY (`id`),
-  KEY `FK_base_role_module_1` (`role_id`),
-  KEY `FK_base_role_module_2` (`module_id`),
-  CONSTRAINT `FK_base_role_module_1` FOREIGN KEY (`role_id`) REFERENCES `t_base_role` (`id`),
-  CONSTRAINT `FK_base_role_module_2` FOREIGN KEY (`module_id`) REFERENCES `t_base_module` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='角色模块表';
 
 --
@@ -173,6 +193,29 @@ INSERT INTO `t_base_role_module` (`id`,`role_id`,`module_id`) VALUES
  (8,1,14),
  (9,1,21);
 /*!40000 ALTER TABLE `t_base_role_module` ENABLE KEYS */;
+
+
+--
+-- Definition of table `t_base_role_permission`
+--
+
+DROP TABLE IF EXISTS `t_base_role_permission`;
+CREATE TABLE `t_base_role_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `roleId` int(11) DEFAULT NULL,
+  `permissionId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `t_base_role_permission`
+--
+
+/*!40000 ALTER TABLE `t_base_role_permission` DISABLE KEYS */;
+INSERT INTO `t_base_role_permission` (`id`,`roleId`,`permissionId`) VALUES 
+ (1,1,1),
+ (2,1,2);
+/*!40000 ALTER TABLE `t_base_role_permission` ENABLE KEYS */;
 
 
 --
@@ -202,8 +245,8 @@ CREATE TABLE `t_base_user` (
 
 /*!40000 ALTER TABLE `t_base_user` DISABLE KEYS */;
 INSERT INTO `t_base_user` (`id`,`account`,`password`,`real_name`,`sex`,`email`,`mobile`,`office_phone`,`error_count`,`last_login_time`,`last_login_ip`,`remark`) VALUES 
- (2,'test','ddee6e95fae5bb5f8890a6f9ef7d0d1db744ca4417e94c05595ef280046a49021eba3291ee9c9cf8','测试用户',0,'test@qq.com','119','110',0,'2012-11-06 16:52:07',NULL,NULL),
- (1,'admin','6043ae1095884cf9663d140ee6450b49b8489b3aa073a8eec024492b976ee2a24aee0c272369121b','超级管理员',0,'admin@qq.com.cn','119','110',0,'2012-11-07 15:52:04','127.0.0.1','用户信息');
+ (1,'admin','6043ae1095884cf9663d140ee6450b49b8489b3aa073a8eec024492b976ee2a24aee0c272369121b','超级管理员',0,'admin@qq.com.cn','119','110',0,'2012-11-07 15:52:04','127.0.0.1','用户信息'),
+ (2,'test','ddee6e95fae5bb5f8890a6f9ef7d0d1db744ca4417e94c05595ef280046a49021eba3291ee9c9cf8','测试用户',0,'test@qq.com','119','110',0,'2012-11-06 16:52:07',NULL,NULL);
 /*!40000 ALTER TABLE `t_base_user` ENABLE KEYS */;
 
 
@@ -216,11 +259,7 @@ CREATE TABLE `t_base_user_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
   `user_id` int(10) unsigned DEFAULT NULL COMMENT '用户ID',
   `role_id` int(10) unsigned DEFAULT NULL COMMENT '角色ID',
-  PRIMARY KEY (`id`),
-  KEY `FK_base_user_role_1` (`user_id`),
-  KEY `FK_base_user_role_2` (`role_id`),
-  CONSTRAINT `FK_base_user_role_1` FOREIGN KEY (`user_id`) REFERENCES `t_base_user` (`id`),
-  CONSTRAINT `FK_base_user_role_2` FOREIGN KEY (`role_id`) REFERENCES `t_base_role` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户角色表';
 
 --

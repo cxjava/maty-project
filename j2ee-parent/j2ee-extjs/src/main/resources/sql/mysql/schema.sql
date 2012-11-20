@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS t_base_role_module;
 DROP TABLE IF EXISTS t_base_user;
 DROP TABLE IF EXISTS t_base_user_role;
 DROP TABLE IF EXISTS t_base_field;
-
+DROP TABLE IF EXISTS t_base_permission;
+DROP TABLE IF EXISTS t_base_role_permission;
 
 CREATE TABLE t_base_field (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -33,41 +34,57 @@ CREATE TABLE t_base_module (
   information varchar(128) DEFAULT NULL,
   parent_url bigint(20) DEFAULT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='ÏµÍ³Ä£¿é±í';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='ç³»ç»Ÿæ¨¡å—è¡¨';
 
 CREATE TABLE t_base_role (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '½ÇÉ«ID',
-  role_name varchar(64) DEFAULT NULL COMMENT '½ÇÉ«Ãû³Æ',
-  role_desc varchar(128) DEFAULT NULL COMMENT '½ÇÉ«ÃèÊö',
+  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'è§’è‰²ID',
+  role_name varchar(64) DEFAULT NULL COMMENT 'è§’è‰²åç§°',
+  role_desc varchar(128) DEFAULT NULL COMMENT 'è§’è‰²æè¿°',
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='½ÇÉ«±í';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='è§’è‰²è¡¨';
 
 CREATE TABLE t_base_role_module (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '½ÇÉ«Ä£¿éID',
-  role_id int(10) unsigned DEFAULT NULL COMMENT '½ÇÉ«ID',
-  module_id int(10) unsigned DEFAULT NULL COMMENT 'Ä£¿éID',
+  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'è§’è‰²æ¨¡å—ID',
+  role_id int(10) unsigned DEFAULT NULL COMMENT 'è§’è‰²ID',
+  module_id int(10) unsigned DEFAULT NULL COMMENT 'æ¨¡å—ID',
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='½ÇÉ«Ä£¿é±í';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='è§’è‰²æ¨¡å—è¡¨';
 
 CREATE TABLE t_base_user (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ÓÃ»§ID',
-  account varchar(64) NOT NULL COMMENT 'ÕËºÅ',
-  password varchar(128) NOT NULL COMMENT 'ÃÜÂë\r\norg.springframework.security.crypto.password.StandardPasswordEncoder.StandardPasswordEncoder(CharSequence secret)',
-  real_name varchar(64) DEFAULT NULL COMMENT 'ÓÃ»§ÕæÊµĞÕÃû',
-  sex int(1) unsigned DEFAULT NULL COMMENT 'ĞÔ±ğ 0:ÄĞ 1:Å®',
-  email varchar(64) DEFAULT NULL COMMENT 'µç×ÓÓÊ¼şµØÖ·',
-  mobile varchar(32) DEFAULT NULL COMMENT 'ÊÖ»ú',
-  office_phone varchar(32) DEFAULT NULL COMMENT '°ì¹«µç»°',
-  error_count int(2) unsigned DEFAULT '0' COMMENT 'ÃÜÂë´íÎó´ÎÊı',
-  last_login_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'ÉÏ´ÎµÇÂ¼Ê±¼ä',
-  last_login_ip varchar(32) DEFAULT NULL COMMENT 'ÉÏ´ÎµÇÂ¼IPµØÖ·',
-  remark varchar(128) DEFAULT NULL COMMENT '±¸×¢',
+  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ç”¨æˆ·ID',
+  account varchar(64) NOT NULL COMMENT 'è´¦å·',
+  password varchar(128) NOT NULL COMMENT 'å¯†ç \r\norg.springframework.security.crypto.password.StandardPasswordEncoder.StandardPasswordEncoder(CharSequence secret)',
+  real_name varchar(64) DEFAULT NULL COMMENT 'ç”¨æˆ·çœŸå®å§“å',
+  sex int(1) unsigned DEFAULT NULL COMMENT 'æ€§åˆ« 0:ç”· 1:å¥³',
+  email varchar(64) DEFAULT NULL COMMENT 'ç”µå­é‚®ä»¶åœ°å€',
+  mobile varchar(32) DEFAULT NULL COMMENT 'æ‰‹æœº',
+  office_phone varchar(32) DEFAULT NULL COMMENT 'åŠå…¬ç”µè¯',
+  error_count int(2) unsigned DEFAULT '0' COMMENT 'å¯†ç é”™è¯¯æ¬¡æ•°',
+  last_login_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'ä¸Šæ¬¡ç™»å½•æ—¶é—´',
+  last_login_ip varchar(32) DEFAULT NULL COMMENT 'ä¸Šæ¬¡ç™»å½•IPåœ°å€',
+  remark varchar(128) DEFAULT NULL COMMENT 'å¤‡æ³¨',
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='ÓÃ»§±í';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='ç”¨æˆ·è¡¨';
 
 CREATE TABLE t_base_user_role (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ÓÃ»§½ÇÉ«ID',
-  user_id int(10) unsigned DEFAULT NULL COMMENT 'ÓÃ»§ID',
-  role_id int(10) unsigned DEFAULT NULL COMMENT '½ÇÉ«ID',
+  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ç”¨æˆ·è§’è‰²ID',
+  user_id int(10) unsigned DEFAULT NULL COMMENT 'ç”¨æˆ·ID',
+  role_id int(10) unsigned DEFAULT NULL COMMENT 'è§’è‰²ID',
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='ÓÃ»§½ÇÉ«±í';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='ç”¨æˆ·è§’è‰²è¡¨';
+
+CREATE TABLE  t_base_permission  (
+   id  int(11) NOT NULL AUTO_INCREMENT,
+   name  varchar(100) NOT NULL,
+   permission  varchar(100) NOT NULL,
+   remark  varchar(100) DEFAULT NULL,
+  PRIMARY KEY ( id )
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+CREATE TABLE  t_base_role_permission  (
+   id  int(11) NOT NULL AUTO_INCREMENT,
+   roleId  int(11) DEFAULT NULL,
+   permissionId  int(11) DEFAULT NULL,
+  PRIMARY KEY ( id )
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+

@@ -62,3 +62,10 @@ INSERT INTO t_base_field (id,field,field_name,value_field,display_field,enabled,
 INSERT INTO t_base_field (id,field,field_name,value_field,display_field,enabled,sort) VALUES (33,'theme','风格','ext-all-xtheme-blue03.css','灰色',1,3);
 INSERT INTO t_base_field (id,field,field_name,value_field,display_field,enabled,sort) VALUES (34,'theme','风格','xtheme-midnight.css','午夜',1,10);
 INSERT INTO t_base_field (id,field,field_name,value_field,display_field,enabled,sort) VALUES (35,'theme','风格','xtheme-pink.css','粉红色',1,12);
+
+
+INSERT INTO  t_base_permission (id,name,permission,remark) VALUES  (1,'用户删除','user:delete','删除用户操作');
+INSERT INTO  t_base_permission (id,name,permission,remark) VALUES  (2,'用户添加','user:add','添加用户');
+
+INSERT INTO  t_base_role_permission (id,roleId,permissionId) VALUES  (1,1,1);
+INSERT INTO  t_base_role_permission (id,roleId,permissionId ) VALUES  (2,1,2);

@@ -42,7 +42,7 @@
 		<property name="showSql" value="false" />
 		<property name="generateDdl" value="true" />
 		<property name="databasePlatform">
-			<bean factory-method="getDialect" class="org.springside.modules.persistence.Hibernates">
+			<bean factory-method="getDialect" class="com.maty.j2ee.common.utils.Hibernates">
 				<constructor-arg ref="dataSource"/>
 			</bean>
 		</property>
@@ -59,9 +59,9 @@
 	<!-- 使用annotation定义事务 -->
 	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 
-	<!-- JSR303 Validator定义 -->
- 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-	
+	<!-- JSR303 Validator,hibernate validator -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
 	<!-- H2环境 -->
  	<beans profile="H2">
  		<context:property-placeholder ignore-unresolvable="true"
@@ -87,7 +87,7 @@
 		<!-- 初始化数据表结构 -->
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 			<jdbc:script location="classpath:sql/h2/schema.sql" encoding="UTF-8" />
-			<jdbc:script location="classpath:sql/h2/data.sql"  encoding="UTF-8"/>
+			<jdbc:script location="classpath:sql/data/data.sql"  encoding="UTF-8"/>
 		</jdbc:initialize-database>
 	</beans>
 	
@@ -107,7 +107,7 @@
 		<!-- 初始化数据表结构 -->
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 			<jdbc:script location="classpath:sql/mysql/schema.sql" encoding="UTF-8" />
-			<jdbc:script location="classpath:sql/mysql/data.sql"  encoding="UTF-8"/>
+			<jdbc:script location="classpath:sql/data/data.sql"  encoding="UTF-8"/>
 		</jdbc:initialize-database>
 	</beans>
 	
@@ -126,7 +126,7 @@
 		<!-- 初始化数据表结构 -->
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 			<jdbc:script location="classpath:sql/h2/schema.sql" encoding="UTF-8" />
-			<jdbc:script location="classpath:sql/h2/data.sql"  encoding="UTF-8"/>
+			<jdbc:script location="classpath:sql/data/data.sql"  encoding="UTF-8"/>
 		</jdbc:initialize-database>
 		<!-- <jdbc:embedded-database id="dataSource" type="H2">
 			<jdbc:script location="classpath:sql/h2/schema.sql" encoding="UTF-8" />
