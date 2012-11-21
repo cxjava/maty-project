@@ -2,11 +2,8 @@ package com.maty.j2ee.web;
 
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.shiro.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +59,9 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String fail(@RequestParam(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM) String userName, Model model) {
+		LOG.warn("user default language is {},it's not in support group.", "aa");
 		model.addAttribute(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, userName);
-		return "login";
+		return "index";
 	}
 
 }

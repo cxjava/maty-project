@@ -10,10 +10,15 @@
 		<property name="realm" ref="shiroRealm" />
 		<property name="cacheManager" ref="shiroEhcacheManager" />
 	</bean>
-
+	<bean id="sha512Matcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+		<property name="hashAlgorithmName" value="SHA-1" />
+		<property name="hashIterations" value="1024" />
+	</bean>
+        
 	<!-- 項目自定义的Realm, 所有accountService依赖的dao都需要用depends-on声明 -->
 	<bean id="shiroRealm" class="com.maty.j2ee.service.ShiroRealm" depends-on="baseUserRepository">
 		<property name="baseUserService" ref="baseUserServiceImpl"/>
+		<property name="credentialsMatcher" ref="sha512Matcher"/>
 	</bean>
 	
 	<!-- Shiro Filter -->

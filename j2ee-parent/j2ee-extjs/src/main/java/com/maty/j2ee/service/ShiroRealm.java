@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -32,13 +31,13 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.crypto.RandomNumberGenerator;
-import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.codec.Hex;
 import org.apache.shiro.crypto.hash.Sha1Hash;
-import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,34 +52,29 @@ import com.maty.j2ee.entity.BaseUser;
 @Service
 public class ShiroRealm extends AuthorizingRealm {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ShiroRealm.class);
 	public static final int HASH_INTERATIONS = 1024;
-	protected BaseUserService baseUserService;
+	private BaseUserService baseUserService;
 
 	/**
 	 * 认证回调函数,登录时调用.
 	 */
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+		LOG.info(token.getUsername());
 		BaseUser user = baseUserService.findUserByLoginName(token.getUsername());
+		LOG.info(user.getPassword());
+		
 		if (user != null) {
 			// if (user.getStatus().equals("disabled")) {
 			// throw new DisabledAccountException();
 			// }
-
-			// byte[] salt = Encodes.decodeHex(user.getSalt());
-			//Note that a normal app would reference an attribute rather
-			//than create a new RNG every time:
-			RandomNumberGenerator rng = new SecureRandomNumberGenerator();
-			Object salt = rng.nextBytes();
-			//now hash the plain-text password with the random salt and multiple
-			//iterations and then Base64-encode the value (requires less space than Hex):
-			String hashedPasswordBase64 = new Sha1Hash("admin", salt, 1024).toBase64();
-			
-//			byte[] salt = new byte[1024];
+			LOG.info(user.getSalt());
 			return new SimpleAuthenticationInfo(new ShiroUser(user.getAccount(), user.getRealName()), user.getPassword(),
-					ByteSource.Util.bytes(salt), getName());
+					ByteSource.Util.bytes(Hex.decode(user.getSalt())), getName());
 		} else {
+			LOG.info(user.getSex()+"");
 			return null;
 		}
 	}
@@ -104,16 +98,6 @@ public class ShiroRealm extends AuthorizingRealm {
 	}
 
 	/**
-	 * 设定Password校验的Hash算法与迭代次数.
-	 */
-	@PostConstruct
-	public void initCredentialsMatcher() {
-		HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(Sha1Hash.ALGORITHM_NAME);
-		matcher.setHashIterations(HASH_INTERATIONS);
-		setCredentialsMatcher(matcher);
-	}
-
-	/**
 	 * @param baseUserService
 	 *            the baseUserService to set
 	 */
@@ -127,8 +111,8 @@ public class ShiroRealm extends AuthorizingRealm {
 	 */
 	public static class ShiroUser implements Serializable {
 		private static final long serialVersionUID = -1373760761780840081L;
-		public String loginName;
-		public String name;
+		private String loginName;
+		private String name;
 
 		/**
 		 * @param loginName

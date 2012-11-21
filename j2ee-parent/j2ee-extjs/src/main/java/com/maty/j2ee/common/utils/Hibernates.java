@@ -12,11 +12,16 @@ import org.hibernate.dialect.H2Dialect;
 import org.hibernate.dialect.MySQL5InnoDBDialect;
 import org.hibernate.dialect.Oracle10gDialect;
 
+import com.maty.j2ee.service.ServiceException;
+
 /**
  * 
  * @author calvin
  */
 public class Hibernates {
+	
+	protected Hibernates() {
+	}
 
 	public static final String DATETIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
 
@@ -58,7 +63,7 @@ public class Hibernates {
 			}
 			return connection.getMetaData().getURL();
 		} catch (SQLException e) {
-			throw new RuntimeException("Could not get database url", e);
+			throw new ServiceException("Could not get database url", e);
 		} finally {
 			if (connection != null) {
 				try {

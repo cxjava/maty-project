@@ -9,6 +9,8 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.codec.Hex;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha1Hash;
@@ -39,10 +41,6 @@ public class BaseLoginTest extends Base {
 		user.setLastLoginTime(new Date());
 	}
 
-	@Test
-	public void testDeleteUser() {
-		userRepository.deleteAll();
-	}
 
 	@Test
     public void testBackwardsCompatibleSaltedAuthenticationInfo() {
@@ -51,18 +49,21 @@ public class BaseLoginTest extends Base {
         matcher.setHashIterations(1024); 
         //simulate an account with SHA-1 hashed password, using the username as the salt
         //(BAD IDEA, but backwards-compatible):
-        final String username = "admin";
-        final String password = "admin";
+        final String username = "test";
+        final String password = "1";
       //Note that a normal app would reference an attribute rather
 		//than create a new RNG every time:
 		RandomNumberGenerator rng = new SecureRandomNumberGenerator();
-		ByteSource  salt = rng.nextBytes();
+		ByteSource  byteSource = rng.nextBytes();
+		String salt=byteSource.toHex();
+		System.out.println(salt);
 		//now hash the plain-text password with the random salt and multiple
 		//iterations and then Base64-encode the value (requires less space than Hex):
-		Object hashedPasswordBase64 = new Sha1Hash(password, salt, 1024).toBase64();
-		
-        AuthenticationInfo account = new  SimpleAuthenticationInfo(new ShiroRealm.ShiroUser(username, username), hashedPasswordBase64,
-				salt, "getName()");
+		Sha1Hash sha1Hash = new Sha1Hash(password, byteSource, 1024);
+		String hexPassword=sha1Hash.toHex();
+		System.out.println(hexPassword);
+        AuthenticationInfo account = new  SimpleAuthenticationInfo(new ShiroRealm.ShiroUser(username, username), hexPassword,
+        		ByteSource.Util.bytes(Hex.decode(salt)), "getName()");
  
         //simulate a username/password (plaintext) token created in response to a login attempt:
         AuthenticationToken token = new UsernamePasswordToken(username, password);

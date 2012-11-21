@@ -53,7 +53,8 @@ CREATE TABLE t_base_role_module (
 CREATE TABLE t_base_user (
   id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   account varchar(64) NOT NULL COMMENT '账号',
-  password varchar(128) NOT NULL COMMENT '密码\r\norg.springframework.security.crypto.password.StandardPasswordEncoder.StandardPasswordEncoder(CharSequence secret)',
+  password varchar(256) NOT NULL COMMENT '密码\r\norg.springframework.security.crypto.password.StandardPasswordEncoder.StandardPasswordEncoder(CharSequence secret)',
+  salt varchar(128) NOT NULL,
   real_name varchar(64) DEFAULT NULL COMMENT '用户真实姓名',
   sex int(1) unsigned DEFAULT NULL COMMENT '性别 0:男 1:女',
   email varchar(64) DEFAULT NULL COMMENT '电子邮件地址',

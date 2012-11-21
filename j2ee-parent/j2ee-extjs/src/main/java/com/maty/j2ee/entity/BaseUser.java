@@ -21,6 +21,7 @@ public class BaseUser extends IdEntity {
 	private String account;
 	@NotBlank
 	private String password;
+	private String salt;
 	/** nick name */
 	private String realName;
 	private Integer sex;
@@ -63,6 +64,21 @@ public class BaseUser extends IdEntity {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @return the salt
+	 */
+	public String getSalt() {
+		return salt;
+	}
+
+	/**
+	 * @param salt
+	 *            the salt to set
+	 */
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	/**

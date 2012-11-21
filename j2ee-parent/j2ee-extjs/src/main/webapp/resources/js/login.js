@@ -26,7 +26,7 @@
 						xtype : 'textfield',
 						fieldLabel : language.getMsg("login.form.username"),
 						// blankText : '用户名不能为空',
-						name : 'UserName',
+						name : 'username',
 						id : 'UserName',
 						allowBlank : false,
 						width : 260
@@ -35,7 +35,7 @@
 						fieldLabel : language.getMsg("login.form.password"),
 						allowBlank : false,
 						// blankText : '密码不能为空',
-						name : 'PassWord',
+						name : 'password',
 						id : 'PassWord',
 						width : 260,
 						inputType : 'password'
@@ -50,7 +50,7 @@
 									clientValidation : true,
 									waitMsg : '请稍后',
 									waitTitle : '正在验证登录',
-									url : '/server/checklogin.asp',
+									url : ctx+'/login',
 									success : function(form, action) {
 										// 登录成功后。
 										// 隐藏登录窗口，并重新加载菜单
