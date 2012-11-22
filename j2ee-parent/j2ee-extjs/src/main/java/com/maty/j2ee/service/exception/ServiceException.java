@@ -1,4 +1,4 @@
-package com.maty.j2ee.service;
+package com.maty.j2ee.service.exception;
 
 /**
  * Service层公用的Exception.
@@ -12,7 +12,11 @@ public class ServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = 3583566093089790852L;
 
-	/** error code，config in the i18n file，use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user */
+	/**
+	 * error code，config in the i18n file，use
+	 * MessageSource.getMessage(errorCode, null, locale) get the value ,and show
+	 * to user
+	 */
 	private String errorCode;
 
 	/**
@@ -28,17 +32,20 @@ public class ServiceException extends RuntimeException {
 	public ServiceException(String message) {
 		super(message);
 	}
+
 	/**
 	 * @param message
 	 * @param cause
 	 */
-	public ServiceException(String message,Throwable cause) {
-		super(message,cause);
+	public ServiceException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 	/**
 	 * @param message
-	 * @param errorCode use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
+	 * @param errorCode
+	 *            use MessageSource.getMessage(errorCode, null, locale) get the
+	 *            value ,and show to user
 	 */
 	public ServiceException(String message, String errorCode) {
 		super(message);
@@ -47,7 +54,9 @@ public class ServiceException extends RuntimeException {
 
 	/**
 	 * @param cause
-	 * @param errorCode use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
+	 * @param errorCode
+	 *            use MessageSource.getMessage(errorCode, null, locale) get the
+	 *            value ,and show to user
 	 */
 	public ServiceException(Throwable cause, String errorCode) {
 		super(cause);
@@ -57,7 +66,9 @@ public class ServiceException extends RuntimeException {
 	/**
 	 * @param message
 	 * @param cause
-	 * @param errorCode use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
+	 * @param errorCode
+	 *            use MessageSource.getMessage(errorCode, null, locale) get the
+	 *            value ,and show to user
 	 */
 	public ServiceException(String message, Throwable cause, String errorCode) {
 		super(message, cause);
@@ -65,8 +76,8 @@ public class ServiceException extends RuntimeException {
 	}
 
 	/**
-	 * @return the errorCode
-	 *         use MessageSource.getMessage(errorCode, null, locale) get the value ,and show to user
+	 * @return the errorCode use MessageSource.getMessage(errorCode, null,
+	 *         locale) get the value ,and show to user
 	 */
 	public String getErrorCode() {
 		return errorCode;

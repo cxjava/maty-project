@@ -1,6 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
+<%
+
+Object obj = request.getAttribute(org.apache.shiro.web.filter.authc.FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+
+          boolean flag = false;
+
+          String msg = "";   
+if( obj != null ){
+
+    if( "org.apache.shiro.authc.UnknownAccountException".equals( obj ) )
+
+         msg = "未知帐号错误！";
+
+    else if("org.apache.shiro.authc.IncorrectCredentialsException".equals( obj ))
+
+         msg = "密码错误！";
+
+    else if("com.wearereading.example.shiro.IncorrectCaptchaException".equals( obj ))
+
+         msg = "验证码错误！";
+
+    else if( "org.apache.shiro.authc.AuthenticationException".equals( obj ))
+
+         msg = "认证失败！";
+
+    flag = !"".equals(msg);
+
+}
+
+%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -31,7 +62,6 @@ body {
 		<a href="?locale=zh_CN">中文</a>
 		<a href="?locale=en_US">English</a>
 		<a href="?locale=de_DE">Deutsch</a>
-		<img src="${ctx }/captcha.jpg" alt="abc" width="200" height="50"/>
 	</div>
 
 	<div id="loading">

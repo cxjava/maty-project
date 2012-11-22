@@ -12,7 +12,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.hibernate.dialect.MySQL5InnoDBDialect;
 import org.hibernate.dialect.Oracle10gDialect;
 
-import com.maty.j2ee.service.ServiceException;
+import com.maty.j2ee.service.exception.ServiceException;
 
 /**
  * 

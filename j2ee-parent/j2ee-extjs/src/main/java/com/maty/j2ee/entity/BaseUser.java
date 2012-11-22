@@ -22,14 +22,14 @@ public class BaseUser extends IdEntity {
 	@NotBlank
 	private String password;
 	private String salt;
+	/** count login error times */
+	private Integer errorCount;
 	/** nick name */
 	private String realName;
 	private Integer sex;
 	private String email;
 	private String mobile;
 	private String officePhone;
-	/** count login error times */
-	private Integer errorCount;
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLoginTime;

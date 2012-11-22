@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.maty.j2ee.service.ServiceException;
+import com.maty.j2ee.service.exception.ServiceException;
 
 /**
  * contains main page

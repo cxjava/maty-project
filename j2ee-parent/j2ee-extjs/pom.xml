@@ -46,7 +46,10 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- AOP end -->
-
+		<dependency>
+			<groupId>com.google.code</groupId>
+			<artifactId>kaptcha</artifactId>
+		</dependency>
 		<!-- PERSISTENCE begin -->
 		<!-- hibernate -->
 		<dependency>

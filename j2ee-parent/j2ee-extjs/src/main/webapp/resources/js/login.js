@@ -9,10 +9,10 @@
 		Ext.define('Maty.View.Login', {
 			extend : 'Ext.window.Window',
 			alias : 'widget.loginForm',
-			// requires : [ 'Ext.form.*', 'SMS.view.CheckCode' ],
 			initComponent : function() {
 				var form = Ext.widget('form', {
 					border : false,
+					standardSubmit:true,
 					bodyPadding : 10,
 					fieldDefaults : {
 						labelAlign : 'left',
@@ -25,25 +25,29 @@
 					items : [ {
 						xtype : 'textfield',
 						fieldLabel : language.getMsg("login.form.username"),
-						// blankText : '用户名不能为空',
 						name : 'username',
-						id : 'UserName',
 						allowBlank : false,
 						width : 260
 					}, {
 						xtype : 'textfield',
 						fieldLabel : language.getMsg("login.form.password"),
 						allowBlank : false,
-						// blankText : '密码不能为空',
 						name : 'password',
-						id : 'PassWord',
 						width : 260,
 						inputType : 'password'
+					}, {
+						xtype : 'textfield',
+						fieldLabel : language.getMsg("login.form.password"),
+						allowBlank : false,
+						name : 'captcha',
+						width : 260
 					} ],
 					buttons : [ {
 						text : language.getMsg("login.form.submit"),
 						handler : function() {
 							var form = this.up('form').getForm();
+							var password=form.findField("password");
+							password.setValue(CryptoJS.SHA256(CryptoJS.SHA256(password.getValue())));
 							var win = this.up('window');
 							if (form.isValid()) {
 								form.submit({
