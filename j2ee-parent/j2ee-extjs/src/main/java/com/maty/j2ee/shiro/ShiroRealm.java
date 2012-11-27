@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.maty.j2ee.service;
+package com.maty.j2ee.shiro;
 
 import java.io.Serializable;
-
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -46,7 +45,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.code.kaptcha.Constants;
 import com.maty.j2ee.entity.BaseUser;
-import com.maty.j2ee.entity.CaptchaUsernamePasswordToken;
+import com.maty.j2ee.service.BaseUserService;
 import com.maty.j2ee.service.exception.CaptchaException;
 
 /**
@@ -68,40 +67,42 @@ public class ShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 		CaptchaUsernamePasswordToken token = (CaptchaUsernamePasswordToken) authcToken;
-		LOG.info(token.getUsername());
 		if (StringUtils.isBlank(token.getUsername())) {
 			LOG.warn("Null usernames are not allowed by this realm.");
 			throw new AccountException("Null usernames are not allowed by this realm.");
 		}
 		BaseUser user = baseUserService.findUserByLoginName(token.getUsername());
 		if (null == user) {
-			LOG.error("UnknownAccountException!");
+			LOG.error("will throw UnknownAccountException!");
 			// super will throw UnknownAccountException
 			return null;
 		}
-		
-		//当错误次数达到一定时候需要验证码
-		if(user.getErrorCount()>=5){
+		// 当错误次数达到一定时候需要验证码
+		//TODO:调回正常值
+		if (user.getErrorCount() >= 0) {
 			if (StringUtils.isBlank(token.getCaptcha())) {
-				throw new CaptchaException("Null captcha is not allowed by this realm.");
+				LOG.error("Null captcha is not allowed by this realm.");
+				throw new CaptchaException("Null captcha is not allowed by this realm.", "error.code");
 			}
 			Subject currentUser = SecurityUtils.getSubject();
 			Session session = currentUser.getSession();
 			Object sessionCaptcha = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
 			if (null == sessionCaptcha) {
-				throw new CaptchaException("The captcha is invalid! Please re-enter the new captcha!");
+				LOG.error("The captcha is invalid! Please re-enter the new captcha!");
+				throw new CaptchaException("The captcha is invalid! Please re-enter the new captcha!", "");
 			}
 			if (!token.getCaptcha().equalsIgnoreCase((String) sessionCaptcha)) {
-				throw new CaptchaException("The captcha is not correct, please enter again!");
+				LOG.error("The captcha is not correct, please enter again!");
+				throw new CaptchaException("The captcha is not correct, please enter again!", "");
 			}
 			// 移除验证码，不能用同一个验证码重复提交来试探密码
-			session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);		
+			session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
 		}
-		
+
 		if (StringUtils.isBlank(user.getPassword())) {
 			throw new UnknownAccountException("No account found for user [" + user.getAccount() + "]");
-        }
-		 
+		}
+
 		return new SimpleAuthenticationInfo(new ShiroUser(user.getAccount(), user.getRealName()), user.getPassword(),
 				ByteSource.Util.bytes(Hex.decode(user.getSalt())), getName());
 	}

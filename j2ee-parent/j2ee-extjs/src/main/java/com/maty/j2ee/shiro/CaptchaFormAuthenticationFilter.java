@@ -1,4 +1,4 @@
-package com.maty.j2ee.web.filter;
+package com.maty.j2ee.shiro;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -13,13 +13,11 @@ import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.maty.j2ee.entity.CaptchaUsernamePasswordToken;
 import com.maty.j2ee.service.exception.CaptchaException;
 
 /**
- * 
- * @author <a href="mailto:ketayao@gmail.com">ketayao</a> Version 1.1.0
- * @since 2012-8-7 上午9:20:26
+ * @author Maty Chen
+ *
  */
 public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
@@ -28,7 +26,7 @@ public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 	/** default parameter name */
 	public static final String DEFAULT_CAPTCHA_PARAM = "captcha";
 	/** default parameter name */
-	public static final String DEFAULT_ERRORCODE_PARAM = "captcha";
+	public static final String DEFAULT_ERRORCODE_PARAM = "ERROR_CODE_KEY_ATTRIBUTE";
 
 	/** captcha name */
 	private String captchaParam = DEFAULT_CAPTCHA_PARAM;
@@ -49,12 +47,15 @@ public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 		return errorCodeKeyAttribute;
 	}
 
+	/**
+	 * @param request
+	 * @return
+	 */
 	protected String getCaptcha(ServletRequest request) {
 		return WebUtils.getCleanParam(request, getCaptchaParam());
 	}
 
 	/**
-	 * (non-Javadoc)
 	 * 
 	 * @see org.apache.shiro.web.filter.authc.FormAuthenticationFilter#createToken(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse)
@@ -92,30 +93,43 @@ public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
 		if (!"XMLHttpRequest".equalsIgnoreCase(httpServletRequest.getHeader("X-Requested-With"))) {
-			// 不是ajax请求
-			LOG.debug("not ajax");
+			LOG.debug("it is not an ajax request.");
 			httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + this.getSuccessUrl());
 		} else {
-			LOG.debug("is ajax");
-			httpServletRequest.getRequestDispatcher("/").forward(httpServletRequest, httpServletResponse);
+			LOG.debug("it's an ajax request.");
+			httpServletRequest.getRequestDispatcher(this.getSuccessUrl()).forward(httpServletRequest, httpServletResponse);
 		}
 
 		return false;
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.shiro.web.filter.authc.FormAuthenticationFilter#onLoginFailure(org.apache.shiro.authc.AuthenticationToken,
+	 *      org.apache.shiro.authc.AuthenticationException,
+	 *      javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+	 */
 	@Override
 	protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
 		setFailureAttribute(request, e);
+		// add this add errorCode to request attribute
 		setErrorCodeAttribute(request, e);
 		// login failed, let request continue back to the login page:
 		return true;
 	}
 
+	/**
+	 * @param request
+	 * @param ae
+	 */
 	protected void setErrorCodeAttribute(ServletRequest request, AuthenticationException ae) {
+		// handler some exception defined by developer
 		if (ae instanceof CaptchaException) {
 			CaptchaException captchaException = (CaptchaException) ae;
 			request.setAttribute(getErrorCodeKeyAttribute(), captchaException.getErrorCode());
 		}
+		// else if ae instanceof ....
 	}
 
 }

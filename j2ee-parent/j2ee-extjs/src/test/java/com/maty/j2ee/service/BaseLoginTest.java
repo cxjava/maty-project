@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.maty.j2ee.Base;
 import com.maty.j2ee.entity.BaseUser;
 import com.maty.j2ee.repository.BaseUserRepository;
+import com.maty.j2ee.shiro.ShiroRealm;
 
 public class BaseLoginTest extends Base {
 	@Autowired

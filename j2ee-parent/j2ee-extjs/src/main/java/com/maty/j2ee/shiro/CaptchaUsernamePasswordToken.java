@@ -1,4 +1,4 @@
-package com.maty.j2ee.entity;
+package com.maty.j2ee.shiro;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
 

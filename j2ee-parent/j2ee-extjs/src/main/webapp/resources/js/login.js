@@ -12,7 +12,7 @@
 			initComponent : function() {
 				var form = Ext.widget('form', {
 					border : false,
-					standardSubmit:true,
+//					standardSubmit:true,
 					bodyPadding : 10,
 					fieldDefaults : {
 						labelAlign : 'left',
@@ -26,19 +26,19 @@
 						xtype : 'textfield',
 						fieldLabel : language.getMsg("login.form.username"),
 						name : 'username',
-						allowBlank : false,
+//						allowBlank : false,
 						width : 260
 					}, {
 						xtype : 'textfield',
 						fieldLabel : language.getMsg("login.form.password"),
-						allowBlank : false,
+//						allowBlank : false,
 						name : 'password',
 						width : 260,
 						inputType : 'password'
 					}, {
 						xtype : 'textfield',
 						fieldLabel : language.getMsg("login.form.password"),
-						allowBlank : false,
+//						allowBlank : false,
 						name : 'captcha',
 						width : 260
 					} ],
@@ -59,8 +59,7 @@
 										// 登录成功后。
 										// 隐藏登录窗口，并重新加载菜单
 										win.hide();
-										Ext.getCmp('SystemMenus').store.load();
-
+										location.href = ctx+'/';
 									},
 									failure : function(form, action) {
 										Ext.MessageBox.show({

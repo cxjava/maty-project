@@ -16,16 +16,16 @@
 	</bean>
         
 	<!-- 項目自定义的Realm, 所有accountService依赖的dao都需要用depends-on声明 -->
-	<bean id="shiroRealm" class="com.maty.j2ee.service.ShiroRealm" depends-on="baseUserRepository">
+	<bean id="shiroRealm" class="com.maty.j2ee.shiro.ShiroRealm" depends-on="baseUserRepository">
 		<property name="baseUserService" ref="baseUserServiceImpl"/>
 		<property name="credentialsMatcher" ref="sha512Matcher"/>
 	</bean>
-	<bean id="captchaFormAuthenticationFilter" class="com.maty.j2ee.web.filter.CaptchaFormAuthenticationFilter"></bean>
+	<bean id="captchaFormAuthenticationFilter" class="com.maty.j2ee.shiro.CaptchaFormAuthenticationFilter"></bean>
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login" />
-		<property name="successUrl" value="/" />
+		<property name="successUrl" value="/loginSuccess" />
 		<property name="filters">
             <map>
                  <entry key="authc" value-ref="captchaFormAuthenticationFilter"/>
