@@ -31,7 +31,7 @@ body {
 		<a href="?locale=zh_CN">中文</a>
 		<a href="?locale=en_US">English</a>
 		<a href="?locale=de_DE">Deutsch</a>
-		<img src="${ctx }/captcha.jpg" alt="abc" width="200" height="50"/>
+		<%-- <img src="${ctx }/captcha.jpg" alt="abc" width="200" height="50"/> --%>
 	</div>
 
 	<div id="loading">

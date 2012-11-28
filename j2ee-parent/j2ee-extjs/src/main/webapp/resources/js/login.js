@@ -40,12 +40,39 @@
 						fieldLabel : language.getMsg("login.form.password"),
 //						allowBlank : false,
 						name : 'captcha',
+		                hidden:true,
+//		                src:ctx+'/captcha.jpg'
 						width : 260
+					},{
+		                xtype: 'image',
+		                name : 'captcha1',
+		                hidden:true,
+		                alt:language.getMsg("login.form.password"),
+		                width : 175, //图片宽度  
+						height : 35, //图片高度 
+						style : 'margin-left: 85px',
+		                id:'captcha1',
+//		                itemId: 'p1',
+		                src:''
+		                ,listeners:{
+		                	click: {
+		                        element: 'el', //bind to the underlying el property on the panel
+		                        fn: function(img){
+		                        	console.log(img);
+		                        	console.log(this);
+//		                        	p1 = c.getComponent('p1'); // not the same as Ext.getCmp()
+		                        	this.dom.src=ctx+'/captcha.jpg?'+new Date().getTime();
+		                        	}
+		                    }
+		                }
 					} ],
 					buttons : [ {
 						text : language.getMsg("login.form.submit"),
 						handler : function() {
 							var form = this.up('form').getForm();
+							console.log(this.up('form'));
+							console.log(form);
+							console.log(this.up('form').getComponent('p1'));
 							var password=form.findField("password");
 							password.setValue(CryptoJS.SHA256(CryptoJS.SHA256(password.getValue())));
 							var win = this.up('window');
@@ -58,8 +85,22 @@
 									success : function(form, action) {
 										// 登录成功后。
 										// 隐藏登录窗口，并重新加载菜单
-										win.hide();
-										location.href = ctx+'/';
+										//win.hide();
+										var captcha=form.findField("captcha");
+//										var captcha=Ext.get('_checkimage');
+										console.log(captcha);
+										console.log(form);
+										console.log(form.findField("captcha1"));
+										if(captcha.isHidden()){
+											win.setHeight(win.getHeight()+50);
+											captcha.show();
+//											this.up('form').getComponent('p1').show(null,null,form);
+//											this.up('form').getComponent('p1').dom.src=ctx+'/captcha.jpg?'+new Date().getTime();
+											Ext.get('captcha1').show(null,null,form);
+											Ext.get('captcha1').dom.src=ctx+'/captcha.jpg?'+new Date().getTime();
+											
+										}
+										//location.href = ctx+'/';
 									},
 									failure : function(form, action) {
 										Ext.MessageBox.show({
@@ -80,7 +121,7 @@
 					} ]
 				});
 				Ext.apply(this, {
-					height : 160,
+					height : 150,
 					width : 320,
 					title : language.getMsg('login.windows.title'),
 					closeAction : 'hide',

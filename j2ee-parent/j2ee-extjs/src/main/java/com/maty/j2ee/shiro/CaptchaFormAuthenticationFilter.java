@@ -89,8 +89,8 @@ public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 		// issueSuccessRedirect(request, response);
 		// we handled the success redirect directly, prevent the chain from
 		// continuing:
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
+		HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
 
 		if (!"XMLHttpRequest".equalsIgnoreCase(httpServletRequest.getHeader("X-Requested-With"))) {
 			LOG.debug("it is not an ajax request.");
