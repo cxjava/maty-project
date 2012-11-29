@@ -58,7 +58,7 @@ body {
 				obj : bar
 			};
 		};
-		ctx = '${ctx}', language = '${language}';
+		ctx = '${ctx}', lang = '${language}';
 		var progressResult = {
 			'ext-all-css' : loadProgress('ext-all-css', 2),
 			'ext-all' : loadProgress('ext-all', 1.5),
