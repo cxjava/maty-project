@@ -1,12 +1,12 @@
 (function() {
 	Ext.onReady(function() {
-		language = Ext.create('Ext.i18n.Bundle', {
+		lang = Ext.create('Ext.i18n.Bundle', {
 			bundle : 'messages',
-			lang : language,
+			lang : lang,
 			path : 'resources/i18n',
 			noCache : true
 		});
-		language.onReady(function() {
+		lang.onReady(function() {
 			// captcha's url
 			var captchaUrl = ctx + '/captcha.jpg?';
 			Ext.define('Maty.Login.Form', {
@@ -23,7 +23,7 @@
 				},
 				defaultType : 'textfield',
 				items : [{
-					fieldLabel : language.getMsg("login.form.username"),
+					fieldLabel : lang.getMsg("login.form.username"),
 					name : 'username',
 					listeners : {
 						specialkey : function(field, e) {
@@ -34,7 +34,7 @@
 						}
 					}
 				}, {
-					fieldLabel : language.getMsg("login.form.password"),
+					fieldLabel : lang.getMsg("login.form.password"),
 					name : 'password',
 					inputType : 'password',
 					listeners : {
@@ -45,7 +45,7 @@
 						}
 					}
 				}, {
-					fieldLabel : language.getMsg("login.form.captcha"),
+					fieldLabel : lang.getMsg("login.form.captcha"),
 					allowBlank : true,
 					name : 'captcha',
 					hidden : true,
@@ -61,7 +61,7 @@
 					name : 'captchaImage',
 					itemId : 'captchaImage',
 					hidden : true,
-					alt : language.getMsg("login.form.captcha"),
+					alt : lang.getMsg("login.form.captcha"),
 					width : 150,
 					height : 35,
 					style : 'margin-left: 85px',
@@ -94,25 +94,26 @@
 				closable : true,
 				modal : false,
 				plain : true,
-				title : language.getMsg('login.window.title'),
+				title : lang.getMsg('login.window.title'),
 				resizable : true,
 				categoryModel : null,
 				initComponent : function() {
-					this.form = Ext.create("Maty.Login.Form");
+					var me = this;
+					me.form = Ext.create("Maty.Login.Form");
 					// TODO:判断是否需要验证码，从cookie中取得
 					// add buttons
-					this.buttons = [{
-						text : language.getMsg('login.window.botton.submit'),
-						handler : Ext.bind(this.onSubmitClick, this)
+					me.buttons = [{
+						text : lang.getMsg('login.window.botton.submit'),
+						handler : Ext.bind(me.onSubmitClick, me)
 					}, {
-						text : language.getMsg('login.window.botton.reset'),
-						handler : Ext.bind(this.onResetClick, this)
+						text : lang.getMsg('login.window.botton.reset'),
+						handler : Ext.bind(me.onResetClick, me)
 					}];
-					this.items = this.form;
-					// this.addEvents("save");
-					this.callParent(arguments);
-					// this.on("show",
-					// Ext.bind(this.onShow, this));
+					me.items = me.form;
+					// me.addEvents("save");
+					me.callParent(arguments);
+					// me.on("show",
+					// Ext.bind(me.onShow, me));
 				},
 				onShow : function() {
 					// focus on first item
@@ -122,18 +123,19 @@
 				 * form submit
 				 */
 				onSubmitClick : function() {
-					var form = this.form.getForm();
+					var me = this, form, password;
+					form = me.form.getForm();
 					if (form.isValid()) {
-						var password = form.findField("password");
+						password = form.findField("password");
 						// crypto password
 						password.setValue(CryptoJS.SHA256(CryptoJS.SHA256(password.getValue())));
 						form.submit({
 							clientValidation : true,
 							waitMsg : '请稍后',
 							waitTitle : '正在验证登录',
-							url : this.loginUrl,
-							success : Ext.bind(this.onFormSubmitSuccess, this),
-							failure : Ext.bind(this.onFormSubmitFailure, this)
+							url : me.loginUrl,
+							success : Ext.bind(me.onFormSubmitSuccess, me),
+							failure : Ext.bind(me.onFormSubmitFailure, me)
 						});
 					}
 				},
@@ -169,28 +171,29 @@
 					});
 				},
 				showCaptcha : function() {
-					var captcha = this.form.getForm().findField("captcha");
+					var me = this, captcha;
+					captcha = me.form.getForm().findField("captcha");
 					if (captcha.isHidden()) {
 						// set widow more height
-						this.setHeight(this.getHeight() + 68);
+						me.setHeight(me.getHeight() + 68);
 						captcha.show();
 						// don't allow blank
 						captcha.allowBlank = false;
 						// captcha.labelWidth = 120;
 						// show captcha image
-						this.onCaptchaImageClick();
+						me.onCaptchaImageClick();
 					}
 				},
 				/**
 				 * refresh the capthcha image
 				 */
 				onCaptchaImageClick : function() {
-					var captchaImage = this.form.getComponent("captchaImage");
-					console.log(captchaImage);
+					var me = this, captchaImage;
+					captchaImage = me.form.getComponent("captchaImage");
 					// if hidden，show it.
 					if (captchaImage.isHidden()) {
 						captchaImage.show();
-						captchaImage.el.dom.title = language.getMsg("login.form.captcha.image.title");
+						captchaImage.el.dom.title = lang.getMsg("login.form.captcha.image.title");
 					}
 					// set url
 					captchaImage.setSrc(captchaUrl + new Date().getTime());
@@ -204,7 +207,7 @@
 			Ext.define('PartKeepr.LoginDialog', {
 				extend : 'Ext.Window',
 				/* Various style settings */
-				title : language.getMsg("login.form.captcha.image.title"),
+				title : lang.getMsg("login.form.captcha.image.title"),
 
 				width : 400,
 				height : 125,
@@ -224,7 +227,7 @@
 					this.loginField = Ext.ComponentMgr.create({
 						xtype : 'textfield',
 						value : "",
-						fieldLabel : language.getMsg("login.form.username"),
+						fieldLabel : lang.getMsg("login.form.username"),
 						anchor : '100%'
 					});
 
@@ -232,7 +235,7 @@
 						xtype : 'textfield',
 						inputType : "password",
 						value : "",
-						fieldLabel : language.getMsg("login.form.password"),
+						fieldLabel : lang.getMsg("login.form.password"),
 						anchor : '100%'
 					});
 
@@ -248,11 +251,11 @@
 								minWidth : 100
 							},
 							items : [{
-								text : language.getMsg("login.form.submit"),
+								text : lang.getMsg("login.form.submit"),
 								icon : 'resources/silkicons/connect.png',
 								handler : Ext.bind(this.login, this)
 							}, {
-								text :language.getMsg("login.form.reset"),
+								text : lang.getMsg("login.form.reset"),
 								handler : Ext.bind(this.close, this),
 								icon : 'resources/silkicons/cancel.png'
 							}]
@@ -286,9 +289,9 @@
 
 			});
 
-//			Ext.create("Maty.Login.Window").show();
-			Ext.create("PartKeepr.LoginDialog").show();
-		});
+			Ext.create("Maty.Login.Window").show();
+			// Ext.create("PartKeepr.LoginDialog").show();
+	});
 	});
 
 }());

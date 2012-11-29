@@ -48,7 +48,7 @@ body {
 		</div>
 	</div>
 	<script type="text/javascript">
-	!(function () {
+	(function () {
 		function loadProgress(id, percent) {
 			var bar = document.getElementById(id);
 			return {
@@ -98,7 +98,7 @@ body {
 				yepnope.injectJs('${ctx}/resources/js/login.js', null, {}, 3e4);// 30s
 			}
 		});
-	})();
+	}());
 	</script>
 </body>
 </html>
