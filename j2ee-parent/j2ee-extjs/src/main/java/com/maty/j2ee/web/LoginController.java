@@ -85,6 +85,7 @@ public class LoginController {
 			return new ExtReturn(shiroLoginFailureClass);
 			
 		} else if ("com.maty.j2ee.service.exception.CaptchaException".equals(shiroLoginFailureClass)) {
+			//TODO:添加cookie，需要captcha
 			return new ExtReturn(shiroLoginFailureClass);
 			
 		} else if ("org.apache.shiro.authc.UnknownAccountException".equals(shiroLoginFailureClass)) {

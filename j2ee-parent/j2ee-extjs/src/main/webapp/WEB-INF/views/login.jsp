@@ -10,7 +10,7 @@
 <link rel="shortcut icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 <link rel="icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 <link href="${ctx}/resources/css/progress.css" rel="stylesheet" type="text/css" />
-<script src="${ctx}/resources/libs/yepnope/yepnope.min.js" type="text/javascript"></script>
+<script src="${ctx}/resources/libs/yepnope/yepnope.js" type="text/javascript"></script>
 <style type="text/css">
 #loading {
 	position: absolute;

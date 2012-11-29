@@ -80,6 +80,7 @@ var docElement            = doc.documentElement,
 
     timeout = timeout || yepnope['errorTimeout'];
 
+    script.type = "text/javascript";
     script.src = src;
 
     // Add our extra attributes to the script element
