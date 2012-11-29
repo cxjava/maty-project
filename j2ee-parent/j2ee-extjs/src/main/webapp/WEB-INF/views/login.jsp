@@ -10,7 +10,7 @@
 <link rel="shortcut icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 <link rel="icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 <link href="${ctx}/resources/css/progress.css" rel="stylesheet" type="text/css" />
-<script src="${ctx}/resources/libs/yepnope/yepnope.min.js" type="text/javascript"></script>
+<script src="${ctx}/resources/libs/yepnope/yepnope.js" type="text/javascript"></script>
 <style type="text/css">
 #loading {
 	position: absolute;
@@ -31,7 +31,7 @@ body {
 		<a href="?locale=zh_CN">中文</a>
 		<a href="?locale=en_US">English</a>
 		<a href="?locale=de_DE">Deutsch</a>
-		<img src="${ctx }/captcha.jpg" alt="abc" width="200" height="50"/>
+		<%-- <img src="${ctx }/captcha.jpg" alt="abc" width="200" height="50"/> --%>
 	</div>
 
 	<div id="loading">

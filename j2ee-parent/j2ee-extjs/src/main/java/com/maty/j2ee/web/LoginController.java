@@ -80,10 +80,12 @@ public class LoginController {
 			HttpServletRequest request, HttpServletResponse response) {
 		String shiroLoginFailureClass = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 		LOG.warn("shiroLoginFailureClass is {}.", shiroLoginFailureClass);
-		if ("org.apache.shiro.authc.AccountException".equals(shiroLoginFailureClass)) {
+		if ("com.maty.j2ee.service.exception.LoginException".equals(shiroLoginFailureClass)) {
 			// username is null or blank
 			return new ExtReturn(shiroLoginFailureClass);
+			
 		} else if ("com.maty.j2ee.service.exception.CaptchaException".equals(shiroLoginFailureClass)) {
+			//TODO:添加cookie，需要captcha
 			return new ExtReturn(shiroLoginFailureClass);
 			
 		} else if ("org.apache.shiro.authc.UnknownAccountException".equals(shiroLoginFailureClass)) {
@@ -103,6 +105,8 @@ public class LoginController {
 		} else if ("org.apache.shiro.authc.AuthenticationException".equals(shiroLoginFailureClass)) {
 			return new ExtReturn(shiroLoginFailureClass);
 			// unexpected condition - error?
+		} else if ("org.apache.shiro.authc.AccountException".equals(shiroLoginFailureClass)) {
+			return new ExtReturn(shiroLoginFailureClass);
 		}else{
 			LOG.error(shiroLoginFailureClass);
 			return new ExtReturn(shiroLoginFailureClass);

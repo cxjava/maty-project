@@ -29,7 +29,6 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.codec.Hex;
@@ -47,6 +46,7 @@ import com.google.code.kaptcha.Constants;
 import com.maty.j2ee.entity.BaseUser;
 import com.maty.j2ee.service.BaseUserService;
 import com.maty.j2ee.service.exception.CaptchaException;
+import com.maty.j2ee.service.exception.LoginException;
 
 /**
  * manage login
@@ -69,7 +69,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		CaptchaUsernamePasswordToken token = (CaptchaUsernamePasswordToken) authcToken;
 		if (StringUtils.isBlank(token.getUsername())) {
 			LOG.warn("Null usernames are not allowed by this realm.");
-			throw new AccountException("Null usernames are not allowed by this realm.");
+			throw new LoginException("Null usernames are not allowed by this realm.","login.error.username.null");
 		}
 		BaseUser user = baseUserService.findUserByLoginName(token.getUsername());
 		if (null == user) {
@@ -79,21 +79,21 @@ public class ShiroRealm extends AuthorizingRealm {
 		}
 		// 当错误次数达到一定时候需要验证码
 		//TODO:调回正常值
-		if (user.getErrorCount() >= 0) {
+		if (user.getErrorCount() >= 11) {
 			if (StringUtils.isBlank(token.getCaptcha())) {
 				LOG.error("Null captcha is not allowed by this realm.");
-				throw new CaptchaException("Null captcha is not allowed by this realm.", "error.code");
+				throw new CaptchaException("Null captcha is not allowed by this realm.", "login.error.captcha.null");
 			}
 			Subject currentUser = SecurityUtils.getSubject();
 			Session session = currentUser.getSession();
 			Object sessionCaptcha = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
 			if (null == sessionCaptcha) {
 				LOG.error("The captcha is invalid! Please re-enter the new captcha!");
-				throw new CaptchaException("The captcha is invalid! Please re-enter the new captcha!", "");
+				throw new CaptchaException("The captcha is invalid! Please re-enter the new captcha!", "login.error.captcha.overdue");
 			}
 			if (!token.getCaptcha().equalsIgnoreCase((String) sessionCaptcha)) {
 				LOG.error("The captcha is not correct, please enter again!");
-				throw new CaptchaException("The captcha is not correct, please enter again!", "");
+				throw new CaptchaException("The captcha is not correct, please enter again!", "login.error.captcha.wrong");
 			}
 			// 移除验证码，不能用同一个验证码重复提交来试探密码
 			session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
