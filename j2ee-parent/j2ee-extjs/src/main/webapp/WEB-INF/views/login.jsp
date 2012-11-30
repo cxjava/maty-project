@@ -98,7 +98,7 @@ body {
 				yepnope.injectJs('${ctx}/resources/js/login.js', null, {}, 3e4);// 30s
 			}
 		});
-	}());
+	})();
 	</script>
 </body>
 </html>

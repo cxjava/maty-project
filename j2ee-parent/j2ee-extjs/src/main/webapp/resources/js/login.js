@@ -227,7 +227,7 @@
 					this.loginField = Ext.ComponentMgr.create({
 						xtype : 'textfield',
 						value : "",
-						fieldLabel : lang.getMsg("login.form.username"),
+						fieldLabel : lang.getMsg("login.form.username",'陈鑫','陈鑫'),
 						anchor : '100%'
 					});
 
@@ -294,4 +294,4 @@
 	});
 	});
 
-}());
+})();

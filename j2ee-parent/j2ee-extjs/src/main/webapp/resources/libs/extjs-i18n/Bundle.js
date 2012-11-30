@@ -180,14 +180,17 @@ Ext.define('Ext.i18n.Bundle', {
 	 * @param: key {String} Bundle key.
 	 * @return: {String} The bundle key content. 
 	 */
-	getMsg: function(key){
+	getMsg : function(key) {
+		var args = Ext.Array.toArray(arguments, 1), result;
 		var rec = this.getById(key);
-		return rec ? Ext.util.Format.htmlDecode(rec.get('value')) : key + '.undefined';
+		result = rec ? Ext.util.Format.htmlDecode(rec.get('value')) : key + '.undefined';
+		return result.replace(/\{(\d+)\}/g, function(m, i) {
+			return args[i];
+		});
 	},
 	
 	/**
-	 * @method: onReady
-	 * The fn will be called when the Bundle file is loaded.
+	 * @method: onReady The fn will be called when the Bundle file is loaded.
 	 * @param: fn {Function}
 	 */
 	onReady: function(fn){
