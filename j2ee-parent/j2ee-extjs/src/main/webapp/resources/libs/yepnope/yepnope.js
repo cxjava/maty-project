@@ -555,7 +555,7 @@ var docElement            = doc.documentElement,
   };
 
   // Default error timeout to 10sec - modify to alter
-  yepnope['errorTimeout'] = 1e4;
+  yepnope['errorTimeout'] = 6e4;
 
   // Webreflection readystate hack
   // safe for jQuery 1.4+ ( i.e. don't use yepnope with jQuery 1.3.2 )
