@@ -4,7 +4,7 @@
 			bundle : 'messages',
 			lang : lang,
 			path : 'resources/i18n',
-			noCache : true
+			noCache : false
 		});
 		lang.onReady(function() {
 			// captcha's url

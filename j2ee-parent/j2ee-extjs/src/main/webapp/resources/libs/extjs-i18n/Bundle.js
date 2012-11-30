@@ -1,4 +1,8 @@
-Ext.define('Ext.i18n.reader.Property', {
+/**
+ * @author Maximiliano Fierro
+ * @class Ext.i18n.Bundle
+ * @extends Ext.data.Store
+ */Ext.define('Ext.i18n.reader.Property', {
     extend: 'Ext.data.reader.Json',
     alias : 'reader.property',
 	
@@ -138,7 +142,7 @@ Ext.define('Ext.i18n.Bundle', {
 		me.bundle = config.bundle || me.bundle;
 		me.path = config.path || me.path;
 			
-		url = this.buildURL(language);
+		url = me.buildURL(language);
 
 		delete config.lang;
 		delete config.noCache;
@@ -157,13 +161,13 @@ Ext.define('Ext.i18n.Bundle', {
 				getParams: Ext.emptyFn
 			},
 			listeners:{
-				'load': this.onBundleLoad,
-				scope: this
+				'load': me.onBundleLoad,
+				scope: me
 			}
 		});
 
 		me.callParent([config]);
-		me.getProxy().on('exception', this.loadParent, this, {single: true});
+		me.getProxy().on('exception', me.loadParent, me, {single: me});
 	},
 	
 	/**
@@ -194,8 +198,9 @@ Ext.define('Ext.i18n.Bundle', {
 	 * @param: fn {Function}
 	 */
 	onReady: function(fn){
-		this.readyFn = fn;
-		this.on('loaded', this.readyFn, this);
+		var me = this;
+		me.readyFn = fn;
+		me.on('loaded', me.readyFn, me);
 	},
 	
 	/**
@@ -212,7 +217,6 @@ Ext.define('Ext.i18n.Bundle', {
 	 */
 	onProxyLoad: function(op){
 		if(op.getRecords()){
-
 			this.callParent(arguments);
 		}
 	},
@@ -221,11 +225,11 @@ Ext.define('Ext.i18n.Bundle', {
 	 * @private
 	 */
 	buildURL: function(language){
-		var url = '';
-		if (this.path) url+= this.path + '/';
-		url+=this.bundle;
+		var me=this,url = '';
+		if (me.path) url+= me.path + '/';
+		url+=me.bundle;
 		if (language) url+= '_'+language;
-		url+=this.resourceExt;
+		url+=me.resourceExt;
 		return url;
 	},
 	
