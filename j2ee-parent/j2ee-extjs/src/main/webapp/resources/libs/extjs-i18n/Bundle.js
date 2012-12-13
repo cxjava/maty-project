@@ -245,10 +245,11 @@ Ext.define('Ext.i18n.Bundle', {
 	 * @private
 	 */
 	formatLanguageCode: function(lang){
-		var langCodes = lang.split('_');
-		langCodes[0] = (langCodes[0]) ? langCodes[0].toLowerCase() : '';
-		langCodes[1] = (langCodes[1]) ? langCodes[1].toUpperCase() : '';
-		return langCodes.join('_');
+		return lang;
+//		var langCodes = lang.split('_');
+//		langCodes[0] = (langCodes[0]) ? langCodes[0].toLowerCase() : '';
+//		langCodes[1] = (langCodes[1]) ? langCodes[1].toUpperCase() : '';
+//		return langCodes.join('_');
 	}
 	
 	

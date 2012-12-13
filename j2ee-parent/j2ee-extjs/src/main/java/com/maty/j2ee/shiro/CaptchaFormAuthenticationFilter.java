@@ -31,6 +31,7 @@ public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 	/** captcha name */
 	private String captchaParam = DEFAULT_CAPTCHA_PARAM;
 
+	/**  */
 	private String errorCodeKeyAttribute = DEFAULT_ERRORCODE_PARAM;
 
 	/**

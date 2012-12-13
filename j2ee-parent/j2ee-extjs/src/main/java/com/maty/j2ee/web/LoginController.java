@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.maty.j2ee.entity.ext.ExtReturn;
+import com.maty.j2ee.shiro.CaptchaFormAuthenticationFilter;
 
 /**
  * LoginController负责打开登录页面(GET请求)和登录出错页面(POST请求)，
@@ -33,12 +34,14 @@ import com.maty.j2ee.entity.ext.ExtReturn;
  * 真正登录的POST请求由Filter完成,
  * 
  * @author calvin
+ * @author Maty Chen
+ * 
  */
 @Controller
 public class LoginController {
 	private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 	/** system support languages */
-	@Value("${avail.languages:en_US,de_DE,zh_CN}")
+	@Value("${avail.languages:en,de,zh}")
 	private String availLanguages;
 
 	private Producer captchaProducer = null;
@@ -55,14 +58,13 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Locale locale, Model model) {
 		// judge the locale is or not in the default languages.
-		if (!ArrayUtils.contains(StringUtils.split(availLanguages, ','), locale.toString())) {
-			// if not,get the first language from configuration file
-			// as a default language
-			LOG.warn("user default language is {},it's not in support group.", locale.toString());
+		if (!ArrayUtils.contains(StringUtils.split(availLanguages, ','), locale.getLanguage())) {
+			// if not,get the first language from configuration file as a default language
+			LOG.warn("user default language is {},it's not in support group.", locale.getLanguage());
 			// get the first one to default language
 			model.addAttribute("language", StringUtils.split(availLanguages, ',')[0]);
 		} else {
-			model.addAttribute("language", locale.toString());
+			model.addAttribute("language", locale.getLanguage());
 		}
 		return "login";
 	}
@@ -76,22 +78,26 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-	public Object fail(@RequestParam(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM) String userName, Locale locale, Model model,
-			HttpServletRequest request, HttpServletResponse response) {
-		String shiroLoginFailureClass = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+	public Object fail(@RequestParam(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM) String userName, Locale locale,
+			Model model, HttpServletRequest request, HttpServletResponse response) {
+		String shiroLoginFailureClass = (String) request
+				.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+		String shiroLoginFailureClass1 = (String) request
+				.getAttribute(CaptchaFormAuthenticationFilter.DEFAULT_ERRORCODE_PARAM);
 		LOG.warn("shiroLoginFailureClass is {}.", shiroLoginFailureClass);
+		LOG.warn("shiroLoginFailureClass1 is {}.", shiroLoginFailureClass1);
 		if ("com.maty.j2ee.service.exception.LoginException".equals(shiroLoginFailureClass)) {
 			// username is null or blank
 			return new ExtReturn(shiroLoginFailureClass);
-			
+
 		} else if ("com.maty.j2ee.service.exception.CaptchaException".equals(shiroLoginFailureClass)) {
-			//TODO:添加cookie，需要captcha
+			// TODO:添加cookie，需要captcha
 			return new ExtReturn(shiroLoginFailureClass);
-			
+
 		} else if ("org.apache.shiro.authc.UnknownAccountException".equals(shiroLoginFailureClass)) {
 			// 用户名不存在
 			return new ExtReturn(shiroLoginFailureClass);
-			
+
 		} else if ("org.apache.shiro.authc.IncorrectCredentialsException".equals(shiroLoginFailureClass)) {
 			// 密码不正确
 			// TODO:更新登录错误次数
@@ -107,10 +113,10 @@ public class LoginController {
 			// unexpected condition - error?
 		} else if ("org.apache.shiro.authc.AccountException".equals(shiroLoginFailureClass)) {
 			return new ExtReturn(shiroLoginFailureClass);
-		}else{
+		} else {
 			LOG.error(shiroLoginFailureClass);
 			return new ExtReturn(shiroLoginFailureClass);
-			//others
+			// others
 		}
 	}
 
