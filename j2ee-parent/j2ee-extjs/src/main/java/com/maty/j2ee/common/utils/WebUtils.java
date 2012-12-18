@@ -1,10 +1,11 @@
 package com.maty.j2ee.common.utils;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.google.common.collect.Maps;
 
 /**
  * Web层相关的实用工具类
@@ -13,7 +14,8 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2011-12-1 下午3:14:59
  */
 public class WebUtils {
-	protected WebUtils() {}
+	protected WebUtils() {
+	}
 
 	/**
 	 * 将请求参数封装为Map<br>
@@ -27,7 +29,7 @@ public class WebUtils {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static Map<String, String> getPraramsAsMap(HttpServletRequest request) {
-		HashMap<String, String> hashMap = new HashMap<String, String>();
+		Map<String, String> hashMap = Maps.newHashMap();
 		Map map = request.getParameterMap();
 		Iterator keyIterator = map.keySet().iterator();
 		while (keyIterator.hasNext()) {
