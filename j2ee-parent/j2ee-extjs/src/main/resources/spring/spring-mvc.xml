@@ -17,8 +17,15 @@
 	
 	<!-- 激活 @Required @Autowired,JSR 250's @PostConstruct, @PreDestroy and @Resource 等标注 -->
 	<context:annotation-config />
-	
-	<mvc:annotation-driven/>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- fastjosn spring support -->
+			<bean id="jsonConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes" value="application/json" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven> 
 		
 	<!-- 将无法mapping到Controller的path交给default servlet handler处理 -->		
 	<mvc:default-servlet-handler/>

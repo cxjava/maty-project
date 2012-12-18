@@ -206,70 +206,88 @@
 			 */
 			Ext.define('PartKeepr.LoginDialog', {
 				extend : 'Ext.Window',
-				/* Various style settings */
-				title : lang.getMsg("login.form.captcha.image.title"),
-
-				width : 400,
+				// closeAction : 'hide',
+				title : lang.getMsg('login.window.title'),
+				loginUrl : ctx + '/login',
+				loginSuccessUrl : ctx + '/',
+				width : 270,
 				height : 125,
-
 				modal : false,
 				resizable : true,
-
 				layout : 'anchor',
-
 				bodyStyle : 'padding: 5px;',
-
 				/**
 				 * Initializes the login dialog component
 				 */
 				initComponent : function() {
-
-					this.loginField = Ext.ComponentMgr.create({
+					var me = this;
+					me.usernameField = Ext.create({
 						xtype : 'textfield',
-						value : "",
-						fieldLabel : lang.getMsg("login.form.username",'陈鑫','陈鑫'),
+						// value : "",
+						fieldLabel : lang.getMsg("login.form.username"),
 						anchor : '100%'
 					});
 
-					this.passwordField = Ext.ComponentMgr.create({
+					me.passwordField = Ext.create({
 						xtype : 'textfield',
 						inputType : "password",
-						value : "",
+						// value : "",
 						fieldLabel : lang.getMsg("login.form.password"),
 						anchor : '100%'
 					});
 
-					Ext.apply(this, {
-						items : [this.loginField, this.passwordField],
-						dockedItems : [{
-							xtype : 'toolbar',
-							enableOverflow : false,
-							dock : 'bottom',
-							ui : 'footer',
-							pack : 'start',
-							defaults : {
-								minWidth : 100
-							},
-							items : [{
-								text : lang.getMsg("login.form.submit"),
-								icon : 'resources/silkicons/connect.png',
-								handler : Ext.bind(this.login, this)
-							}, {
-								text : lang.getMsg("login.form.reset"),
-								handler : Ext.bind(this.close, this),
-								icon : 'resources/silkicons/cancel.png'
-							}]
+					me.captchaField = Ext.create({
+						xtype : 'textfield',
+						// value : "",
+						allowBlank : true,
+						hidden : true,
+						fieldLabel : lang.getMsg("login.form.captcha"),
+						anchor : '100%'
+					});
+					me.captchaImageField = Ext.create({
+						xtype : 'box', // 或者xtype: 'component',
+						width : 150, // 图片宽度
+						height : 35, // 图片高度
+						hidden : true,
+						style : 'margin-left: 75px',
+						autoEl : {
+							tag : 'img', // 指定为img标签
+							alt : lang.getMsg("login.form.captcha"),
+							title : lang.getMsg("login.form.captcha.image.title"),
+							onclick : "javacript:$(this).hide().attr('src', " + ctx + "'/captcha.jpg?' " + new Date().getTime() + ").fadeIn();",
+							src : ctx + '/captcha.jpg?' + new Date().getTime()// 指定url路径
+						},
+						anchor : '100%'
+					});
+					me.toolbar = Ext.create({
+						xtype : 'toolbar',
+						enableOverflow : false,
+						dock : 'bottom',
+						defaults : {
+							minWidth : 50
+						},
+						items : [{
+							text : lang.getMsg('login.window.botton.submit'),
+							handler : Ext.bind(me.onSubmitClick, me)
+						}, {
+							text : lang.getMsg('login.window.botton.reset'),
+							handler : Ext.bind(me.onResetClick, me)
 						}]
 					});
 
-					this.callParent(arguments);
+					Ext.apply(me, {
+						items : [me.loginField, me.passwordField, me.captchaField, me.captchaImageField],
+						dockedItems : [me.toolbar]
+					});
 
-					this.on("render", this.assignEnterKey, this);
+					me.callParent(arguments);
+
+					me.on("render", me.assignEnterKey, me);
 					// Focus the login field on show
 					// @workaround Set the focus 100ms after the dialog has been shown.
-					this.on("show", function() {
-						this.loginField.focus();
-					}, this, {
+					me.on("show", function() {
+						me.usernameField.focus();
+					}, me, {
 						delay : 100
 					});
 				},
@@ -278,15 +296,100 @@
 				 */
 				assignEnterKey : function() {
 					var keyMap = this.getKeyMap();
-					keyMap.on(Ext.EventObject.ENTER, this.login, this);
+					keyMap.on(Ext.EventObject.ENTER, this.onSubmitClick, this);
 				},
 				/**
 				 * Fires the "login" event
 				 */
 				login : function() {
 					this.fireEvent("login", this.loginField.getValue(), this.passwordField.getValue());
-				}
+				},
+				/**
+				 * form submit
+				 */
+				onSubmitClick : function() {
+					var me = this;
+					if (me.usernameField.isValid() && me.passwordField.isValid() && me.captchaField.isValid()) {
+						form.submit({
+							clientValidation : true,
+							waitMsg : '请稍后',
+							waitTitle : '正在验证登录',
+							url : me.loginUrl,
+							success : Ext.bind(me.onFormSubmitSuccess, me),
+							failure : Ext.bind(me.onFormSubmitFailure, me)
+						});
+						Ext.Ajax.request({
+							url : me.loginUrl,
+							success : Ext.bind(me.onFormSubmitSuccess, me),
+							failure : Ext.bind(me.onFormSubmitFailure, me),
+							method : "POST",
+							params : {
+								username : me.usernameField.getValue(),
+								password : CryptoJS.SHA256(CryptoJS.SHA256(me.passwordField.getValue()))
+							}
+						});
+					}
+				},
+				/**
+				 * form reset
+				 */
+				onResetClick : function() {
+					this.form.getForm().reset();
+				},
+				/**
+				 * submit success
+				 * 
+				 * @param form
+				 * @param action
+				 */
+				onFormSubmitSuccess : function(form, action) {
+					location.href = this.loginSuccessUrl;
+				},
+				/**
+				 * submit failure
+				 * 
+				 * @param form
+				 * @param action
+				 */
+				onFormSubmitFailure : function(form, action) {
+					// if(action.result.)
+					this.showCaptcha();
+					Ext.MessageBox.show({
+						width : 150,
+						title : "登录失败",
+						buttons : Ext.MessageBox.OK,
+						msg : action.result.msg
+					});
+				},
+				showCaptcha : function() {
+					var me = this, captcha;
+					captcha = me.form.getForm().findField("captcha");
+					if (captcha.isHidden()) {
+						// set widow more height
+						me.setHeight(me.getHeight() + 68);
+						captcha.show();
+						// don't allow blank
+						captcha.allowBlank = false;
+						// captcha.labelWidth = 120;
+						// show captcha image
+						me.onCaptchaImageClick();
+					}
+				},
+				/**
+				 * refresh the capthcha image
+				 */
+				onCaptchaImageClick : function() {
+					var me = this, captchaImage;
+					captchaImage = me.form.getComponent("captchaImage");
+					// if hidden，show it.
+					if (captchaImage.isHidden()) {
+						captchaImage.show();
+						captchaImage.el.dom.title = lang.getMsg("login.form.captcha.image.title");
+					}
+					// set url
+					captchaImage.setSrc(captchaUrl + new Date().getTime());
 
+				}
 			});
 
 			Ext.create("Maty.Login.Window").show();
