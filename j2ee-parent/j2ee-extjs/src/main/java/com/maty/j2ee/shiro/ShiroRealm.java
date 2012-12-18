@@ -78,7 +78,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		}
 		// 当错误次数达到一定时候需要验证码
 		// TODO:调回正常值
-		if (user.getErrorCount() >= 0) {
+		if (user.getErrorCount() >= 12) {
 			if (StringUtils.isBlank(token.getCaptcha())) {
 				LOG.error("Null captcha is not allowed by this realm.");
 				throw new CaptchaException("Null captcha is not allowed by this realm.", "login.error.captcha.null");
