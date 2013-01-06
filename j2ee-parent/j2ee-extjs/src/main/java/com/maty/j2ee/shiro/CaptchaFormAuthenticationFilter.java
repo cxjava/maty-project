@@ -13,7 +13,7 @@ import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.maty.j2ee.service.exception.CaptchaException;
+import com.maty.j2ee.exception.CaptchaException;
 
 /**
  * @author Maty Chen

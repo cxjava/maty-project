@@ -1,4 +1,4 @@
-package com.maty.j2ee.service.exception;
+package com.maty.j2ee.exception;
 
 import org.apache.shiro.authc.AuthenticationException;
 
@@ -6,10 +6,10 @@ import org.apache.shiro.authc.AuthenticationException;
  * @author Maty Chen
  * 
  */
-public class CaptchaException extends AuthenticationException {
+public class LoginException extends AuthenticationException {
 
 	/**  */
-	private static final long serialVersionUID = -2411082498869295717L;
+	private static final long serialVersionUID = 1625966047389581357L;
 	/**
 	 * error code，config in the i18n file，use
 	 * MessageSource.getMessage(errorCode, null, locale) get the value ,and show
@@ -20,7 +20,7 @@ public class CaptchaException extends AuthenticationException {
 	/**
 	 * 
 	 */
-	public CaptchaException() {
+	public LoginException() {
 		super();
 	}
 
@@ -28,7 +28,7 @@ public class CaptchaException extends AuthenticationException {
 	 * @param message
 	 * @param cause
 	 */
-	public CaptchaException(String message, Throwable cause) {
+	public LoginException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -37,7 +37,7 @@ public class CaptchaException extends AuthenticationException {
 	 * @param errorCode
 	 * @param cause
 	 */
-	public CaptchaException(String message, String errorCode, Throwable cause) {
+	public LoginException(String message, String errorCode, Throwable cause) {
 		super(message, cause);
 		this.errorCode = errorCode;
 	}
@@ -46,7 +46,7 @@ public class CaptchaException extends AuthenticationException {
 	 * @param message
 	 * @param errorCode
 	 */
-	public CaptchaException(String message, String errorCode) {
+	public LoginException(String message, String errorCode) {
 		super(message);
 		this.errorCode = errorCode;
 	}
@@ -54,14 +54,14 @@ public class CaptchaException extends AuthenticationException {
 	/**
 	 * @param message
 	 */
-	public CaptchaException(String message) {
+	public LoginException(String message) {
 		super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public CaptchaException(Throwable cause) {
+	public LoginException(Throwable cause) {
 		super(cause);
 	}
 

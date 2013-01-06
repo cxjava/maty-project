@@ -1,4 +1,4 @@
-package com.maty.j2ee.service.exception;
+package com.maty.j2ee.exception;
 
 /**
  * Service层公用的Exception.

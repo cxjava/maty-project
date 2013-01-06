@@ -44,8 +44,8 @@ import org.springframework.stereotype.Service;
 import com.google.code.kaptcha.Constants;
 import com.maty.j2ee.entity.BaseUser;
 import com.maty.j2ee.service.BaseUserService;
-import com.maty.j2ee.service.exception.CaptchaException;
-import com.maty.j2ee.service.exception.LoginException;
+import com.maty.j2ee.exception.CaptchaException;
+import com.maty.j2ee.exception.LoginException;
 
 /**
  * manage login
