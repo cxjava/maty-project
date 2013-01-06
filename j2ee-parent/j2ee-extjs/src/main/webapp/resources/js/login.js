@@ -1,12 +1,11 @@
 (function() {
 	Ext.onReady(function() {
-		lang = Ext.create('Ext.i18n.Bundle', {
+		Ext.create('Ext.i18n.Bundle', {
 			bundle : 'messages',
 			lang : lang,
 			path : 'resources/i18n',
 			noCache : false
-		});
-		lang.onReady(function() {
+		}).onReady(function() {
 			// captcha's url
 			var captchaUrl = ctx + '/captcha.jpg?';
 			Ext.define('Maty.Login.Form', {
@@ -23,7 +22,7 @@
 				},
 				defaultType : 'textfield',
 				items : [{
-					fieldLabel : lang.getMsg("login.form.username"),
+					fieldLabel : t("login.form.username"),
 					name : 'username',
 					listeners : {
 						specialkey : function(field, e) {
@@ -34,7 +33,7 @@
 						}
 					}
 				}, {
-					fieldLabel : lang.getMsg("login.form.password"),
+					fieldLabel : t("login.form.password"),
 					name : 'password',
 					inputType : 'password',
 					listeners : {
@@ -45,7 +44,7 @@
 						}
 					}
 				}, {
-					fieldLabel : lang.getMsg("login.form.captcha"),
+					fieldLabel : t("login.form.captcha"),
 					allowBlank : true,
 					name : 'captcha',
 					hidden : true,
@@ -61,7 +60,7 @@
 					name : 'captchaImage',
 					itemId : 'captchaImage',
 					hidden : true,
-					alt : lang.getMsg("login.form.captcha"),
+					alt : t("login.form.captcha"),
 					width : 150,
 					height : 35,
 					style : 'margin-left: 85px',
@@ -94,7 +93,7 @@
 				closable : true,
 				modal : false,
 				plain : true,
-				title : lang.getMsg('login.window.title'),
+				title : t('login.window.title'),
 				resizable : true,
 				categoryModel : null,
 				initComponent : function() {
@@ -103,10 +102,10 @@
 					// TODO:判断是否需要验证码，从cookie中取得
 					// add buttons
 					me.buttons = [{
-						text : lang.getMsg('login.window.botton.submit'),
+						text : t('login.window.botton.submit'),
 						handler : Ext.bind(me.onSubmitClick, me)
 					}, {
-						text : lang.getMsg('login.window.botton.reset'),
+						text : t('login.window.botton.reset'),
 						handler : Ext.bind(me.onResetClick, me)
 					}];
 					me.items = me.form;
@@ -193,7 +192,7 @@
 					// if hidden，show it.
 					if (captchaImage.isHidden()) {
 						captchaImage.show();
-						captchaImage.el.dom.title = lang.getMsg("login.form.captcha.image.title");
+						captchaImage.el.dom.title = t("login.form.captcha.image.title");
 					}
 					// set url
 					captchaImage.setSrc(captchaUrl + new Date().getTime());
@@ -207,7 +206,7 @@
 			Ext.define('PartKeepr.LoginDialog', {
 				extend : 'Ext.Window',
 				// closeAction : 'hide',
-				title : lang.getMsg('login.window.title'),
+				title : t('login.window.title'),
 				loginUrl : ctx + '/login',
 				loginSuccessUrl : ctx + '/',
 				width : 270,
@@ -224,7 +223,7 @@
 					me.usernameField = Ext.create({
 						xtype : 'textfield',
 						// value : "",
-						fieldLabel : lang.getMsg("login.form.username"),
+						fieldLabel : t("login.form.username"),
 						anchor : '100%'
 					});
 
@@ -232,7 +231,7 @@
 						xtype : 'textfield',
 						inputType : "password",
 						// value : "",
-						fieldLabel : lang.getMsg("login.form.password"),
+						fieldLabel : t("login.form.password"),
 						anchor : '100%'
 					});
 
@@ -241,7 +240,7 @@
 						// value : "",
 						allowBlank : true,
 						hidden : true,
-						fieldLabel : lang.getMsg("login.form.captcha"),
+						fieldLabel : t("login.form.captcha"),
 						anchor : '100%'
 					});
 					me.captchaImageField = Ext.create({
@@ -252,8 +251,8 @@
 						style : 'margin-left: 75px',
 						autoEl : {
 							tag : 'img', // 指定为img标签
-							alt : lang.getMsg("login.form.captcha"),
-							title : lang.getMsg("login.form.captcha.image.title"),
+							alt : t("login.form.captcha"),
+							title : t("login.form.captcha.image.title"),
 							onclick : "javacript:$(this).hide().attr('src', " + ctx + "'/captcha.jpg?' " + new Date().getTime() + ").fadeIn();",
 							src : ctx + '/captcha.jpg?' + new Date().getTime()// 指定url路径
 						},
@@ -267,10 +266,10 @@
 							minWidth : 50
 						},
 						items : [{
-							text : lang.getMsg('login.window.botton.submit'),
+							text : t('login.window.botton.submit'),
 							handler : Ext.bind(me.onSubmitClick, me)
 						}, {
-							text : lang.getMsg('login.window.botton.reset'),
+							text : t('login.window.botton.reset'),
 							handler : Ext.bind(me.onResetClick, me)
 						}]
 					});
@@ -384,7 +383,7 @@
 					// if hidden，show it.
 					if (captchaImage.isHidden()) {
 						captchaImage.show();
-						captchaImage.el.dom.title = lang.getMsg("login.form.captcha.image.title");
+						captchaImage.el.dom.title = t("login.form.captcha.image.title");
 					}
 					// set url
 					captchaImage.setSrc(captchaUrl + new Date().getTime());

@@ -168,6 +168,16 @@ Ext.define('Ext.i18n.Bundle', {
 
 		me.callParent([config]);
 		me.getProxy().on('exception', me.loadParent, me, {single: me});
+		
+		var oldT = window.t;
+		me.noConflict = function() {
+			window.t = oldT;
+			return me.getMsg;
+		};
+    	//
+		window.lang=me;
+		//show function name ,like https://github.com/js-coder/x18n
+		window.t=me.getMsg;
 	},
 	
 	/**
@@ -186,7 +196,8 @@ Ext.define('Ext.i18n.Bundle', {
 	 */
 	getMsg : function(key) {
 		var args = Ext.Array.toArray(arguments, 1), result;
-		var rec = this.getById(key);
+		// var rec = this.getById(key);
+		var rec = lang.getById(key);
 		result = rec ? Ext.util.Format.htmlDecode(rec.get('value')) : key + '.undefined';
 		return result.replace(/\{(\d+)\}/g, function(m, i) {
 			return args[i];
@@ -251,7 +262,5 @@ Ext.define('Ext.i18n.Bundle', {
 //		langCodes[1] = (langCodes[1]) ? langCodes[1].toUpperCase() : '';
 //		return langCodes.join('_');
 	}
-	
-	
 	
 });
