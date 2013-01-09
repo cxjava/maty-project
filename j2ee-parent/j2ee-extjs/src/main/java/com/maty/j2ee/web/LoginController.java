@@ -43,14 +43,20 @@ public class LoginController {
 	/** system support languages */
 	@Value("${avail.languages:en,de,zh}")
 	private String availLanguages;
-
+	/** verification code */
 	private Producer captchaProducer = null;
+
+	/**
+	 * @param captchaProducer
+	 */
+	@Autowired
+	public void setCaptchaProducer(Producer captchaProducer) {
+		this.captchaProducer = captchaProducer;
+	}
 
 	/**
 	 * go to login page,and get some info from user's browser
 	 * 
-	 * @param request
-	 * @param response
 	 * @param locale
 	 * @param model
 	 * @return
@@ -60,11 +66,15 @@ public class LoginController {
 		// judge the locale is or not in the default languages.
 		if (!ArrayUtils.contains(StringUtils.split(availLanguages, ','), locale.getLanguage())) {
 			// if not,get the first language from configuration file as a default language
-			LOG.warn("user default language is {},it's not in support group.", locale.getLanguage());
+			LOG.debug("user default language is {},it's not in support group.", locale.getLanguage());
 			// get the first one to default language
 			model.addAttribute("language", StringUtils.split(availLanguages, ',')[0]);
 		} else {
-			model.addAttribute("language", locale.getLanguage());
+			if ("zh".equals(locale.getLanguage())) {
+				model.addAttribute("language", "zh_CN");
+			} else {
+				model.addAttribute("language", locale.getLanguage());
+			}
 		}
 		return "login";
 	}
@@ -78,45 +88,40 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-	public Object fail(@RequestParam(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM) String userName, Locale locale,
-			Model model, HttpServletRequest request, HttpServletResponse response) {
-		String shiroLoginFailureClass = (String) request
-				.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-		String shiroLoginFailureClass1 = (String) request
-				.getAttribute(CaptchaFormAuthenticationFilter.DEFAULT_ERRORCODE_PARAM);
+	public Object fail(@RequestParam(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM) String userName, Locale locale, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		String shiroLoginFailureClass = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+		String errorCode = (String) request.getAttribute(CaptchaFormAuthenticationFilter.DEFAULT_ERROR_CODE_PARAM);
 		LOG.warn("shiroLoginFailureClass is {}.", shiroLoginFailureClass);
-		LOG.warn("shiroLoginFailureClass1 is {}.", shiroLoginFailureClass1);
-		if ("com.maty.j2ee.service.exception.LoginException".equals(shiroLoginFailureClass)) {
+		LOG.warn("errorCode is {}.", errorCode);
+		if ("com.maty.j2ee.exception.LoginException".equals(shiroLoginFailureClass)) {
 			// username is null or blank
-			return new ExtReturn(shiroLoginFailureClass);
+			return new ExtReturn(errorCode);
 
-		} else if ("com.maty.j2ee.service.exception.CaptchaException".equals(shiroLoginFailureClass)) {
+		} else if ("com.maty.j2ee.exception.CaptchaException".equals(shiroLoginFailureClass)) {
 			// TODO:添加cookie，需要captcha
-			return new ExtReturn(shiroLoginFailureClass);
+			return new ExtReturn(errorCode);
 
 		} else if ("org.apache.shiro.authc.UnknownAccountException".equals(shiroLoginFailureClass)) {
 			// 用户名不存在
-			return new ExtReturn(shiroLoginFailureClass);
+			return new ExtReturn("login.account.error");
 
 		} else if ("org.apache.shiro.authc.IncorrectCredentialsException".equals(shiroLoginFailureClass)) {
 			// 密码不正确
 			// TODO:更新登录错误次数
-			return new ExtReturn(shiroLoginFailureClass);
+			return new ExtReturn("login.password.incorrect");
 
 		} else if ("org.apache.shiro.authc.LockedAccountException".equals(shiroLoginFailureClass)) {
-			return new ExtReturn(shiroLoginFailureClass);
-			// account for that username is locked - can't login. Show them a
-			// message?
-
+			// account for that username is locked - can't login. Show them a message?
+			return new ExtReturn("login.account.error");
 		} else if ("org.apache.shiro.authc.AuthenticationException".equals(shiroLoginFailureClass)) {
-			return new ExtReturn(shiroLoginFailureClass);
 			// unexpected condition - error?
+			return new ExtReturn("login.account.error");
 		} else if ("org.apache.shiro.authc.AccountException".equals(shiroLoginFailureClass)) {
-			return new ExtReturn(shiroLoginFailureClass);
+			return new ExtReturn("login.account.error");
 		} else {
 			LOG.error(shiroLoginFailureClass);
-			return new ExtReturn(shiroLoginFailureClass);
-			// others
+			return new ExtReturn("login.system.error");
 		}
 	}
 
@@ -176,11 +181,4 @@ public class LoginController {
 		return null;
 	}
 
-	/**
-	 * @param captchaProducer
-	 */
-	@Autowired
-	public void setCaptchaProducer(Producer captchaProducer) {
-		this.captchaProducer = captchaProducer;
-	}
 }

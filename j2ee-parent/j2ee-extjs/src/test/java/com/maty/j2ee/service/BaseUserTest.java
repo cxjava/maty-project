@@ -24,6 +24,7 @@ public class BaseUserTest extends Base {
 		user.setAccount("LiHuai");
 		user.setRealName("李坏");
 		user.setPassword("123456");
+		user.setSalt("123456");
 		user.setLastLoginTime(new Date());
 	}
 

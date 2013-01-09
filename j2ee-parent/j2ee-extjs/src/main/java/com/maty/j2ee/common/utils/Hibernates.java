@@ -23,8 +23,6 @@ public class Hibernates {
 	protected Hibernates() {
 	}
 
-	public static final String DATETIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
-
 	/**
 	 * Initialize the lazy property value.
 	 * 

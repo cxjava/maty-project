@@ -26,13 +26,13 @@ public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 	/** default parameter name */
 	public static final String DEFAULT_CAPTCHA_PARAM = "captcha";
 	/** default parameter name */
-	public static final String DEFAULT_ERRORCODE_PARAM = "ERROR_CODE_KEY_ATTRIBUTE";
+	public static final String DEFAULT_ERROR_CODE_PARAM = "ERROR_CODE_KEY_ATTRIBUTE";
 
 	/** captcha name */
 	private String captchaParam = DEFAULT_CAPTCHA_PARAM;
 
 	/**  */
-	private String errorCodeKeyAttribute = DEFAULT_ERRORCODE_PARAM;
+	private String errorCodeKeyAttribute = DEFAULT_ERROR_CODE_PARAM;
 
 	/**
 	 * @return

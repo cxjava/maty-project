@@ -21,6 +21,7 @@ public class BaseUser extends IdEntity {
 	private String account;
 	@NotBlank
 	private String password;
+	@NotBlank
 	private String salt;
 	/** count login error times */
 	private Integer errorCount;

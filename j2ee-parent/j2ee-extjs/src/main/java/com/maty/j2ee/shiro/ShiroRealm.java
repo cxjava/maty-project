@@ -68,20 +68,20 @@ public class ShiroRealm extends AuthorizingRealm {
 		CaptchaUsernamePasswordToken token = (CaptchaUsernamePasswordToken) authcToken;
 		if (StringUtils.isBlank(token.getUsername())) {
 			LOG.warn("Null usernames are not allowed by this realm.");
-			throw new LoginException("Null usernames are not allowed by this realm.", "login.error.username.null");
+			throw new LoginException("Null usernames are not allowed by this realm.", "login.username.null");
 		}
 		BaseUser user = baseUserService.findUserByLoginName(token.getUsername());
 		if (null == user) {
-			LOG.error("will throw UnknownAccountException!");
 			// super will throw UnknownAccountException
+			LOG.error("will throw UnknownAccountException!");
 			return null;
 		}
 		// 当错误次数达到一定时候需要验证码
 		// TODO:调回正常值
-		if (user.getErrorCount() >= 12) {
+		if (user.getErrorCount() >= 0) {
 			if (StringUtils.isBlank(token.getCaptcha())) {
 				LOG.error("Null captcha is not allowed by this realm.");
-				throw new CaptchaException("Null captcha is not allowed by this realm.", "login.error.captcha.null");
+				throw new CaptchaException("Null captcha is not allowed by this realm.", "login.captcha.null");
 			}
 			Subject currentUser = SecurityUtils.getSubject();
 			Session session = currentUser.getSession();
@@ -89,12 +89,12 @@ public class ShiroRealm extends AuthorizingRealm {
 			if (null == sessionCaptcha) {
 				LOG.error("The captcha is invalid! Please re-enter the new captcha!");
 				throw new CaptchaException("The captcha is invalid! Please re-enter the new captcha!",
-						"login.error.captcha.overdue");
+						"login.captcha.overdue");
 			}
 			if (!token.getCaptcha().equalsIgnoreCase((String) sessionCaptcha)) {
 				LOG.error("The captcha is not correct, please enter again!");
 				throw new CaptchaException("The captcha is not correct, please enter again!",
-						"login.error.captcha.wrong");
+						"login.captcha.wrong");
 			}
 			// 移除验证码，不能用同一个验证码重复提交来试探密码
 			session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);

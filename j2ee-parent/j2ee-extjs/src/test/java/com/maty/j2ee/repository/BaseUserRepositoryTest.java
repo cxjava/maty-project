@@ -25,6 +25,7 @@ public class BaseUserRepositoryTest extends Base {
 		baseUser.setAccount("LiHuai");
 		baseUser.setRealName("李坏");
 		baseUser.setPassword("123456");
+		baseUser.setSalt("123456");
 		baseUser.setLastLoginTime(new Date());
 	}
 

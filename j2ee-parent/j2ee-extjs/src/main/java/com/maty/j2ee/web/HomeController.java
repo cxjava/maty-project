@@ -44,7 +44,11 @@ public class HomeController {
 				// get the first one to default language
 				model.addAttribute("language", StringUtils.split(availLanguages, ',')[0]);
 			} else {
-				model.addAttribute("language", locale.getLanguage());
+				if("zh".equals(locale.getLanguage())){
+					model.addAttribute("language", locale.toString());
+				}else{
+					model.addAttribute("language", locale.getLanguage());
+				}
 			}
 			return "index";
 		} catch (ServiceException e) {
@@ -58,13 +62,5 @@ public class HomeController {
 			LOG.error(WebConstants.EXCEPTION, e);
 			return "";
 		}
-	}
-
-	/**
-	 * 主页面
-	 */
-	@RequestMapping("/main")
-	public String main() {
-		return "main";
 	}
 }

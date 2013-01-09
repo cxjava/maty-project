@@ -10,86 +10,63 @@
 			var captchaUrl = ctx + '/captcha.jpg?';
 			Ext.define('Maty.Login.Form', {
 				extend : 'Ext.form.Panel',
-				border : false,
 				bodyPadding : 10,
 				fieldDefaults : {
 					// labelAlign : 'right',
-					labelWidth : 80,
+					labelWidth : 'zh_CN' === lang.language ? 70 : 110,
 					allowBlank : false
 				},
-				defaults : {
-					margins : '0 0 2 0'
-				},
-				defaultType : 'textfield',
-				items : [{
-					fieldLabel : t("login.form.username"),
-					name : 'username',
-					listeners : {
-						specialkey : function(field, e) {
-							if (e.getKey() == e.ENTER) {
-								// form submit event
-								field.up('window').onSubmitClick();
+				initComponent : function() {
+					var me = this;
+					me.username = Ext.create("Ext.form.field.Text", {
+						fieldLabel : t('login.form.username'),
+						name : 'username',
+						anchor : '100%'
+					});
+
+					me.password = Ext.create("Ext.form.field.Text", {
+						fieldLabel : t('login.form.password'),
+						name : 'password',
+						inputType : 'password',
+						anchor : '100%'
+					});
+
+					me.captcha = Ext.create("Ext.form.field.Text", {
+						fieldLabel : t('login.form.captcha'),
+						allowBlank : true,
+						name : 'captcha',
+						hidden : true,
+						anchor : '100%'
+					});
+					me.captchaImage = Ext.create("Ext.Img", {
+						name : 'captchaImage',
+						hidden : true,
+						alt : t('login.form.captcha'),
+						style : 'margin-left: ' + (this.fieldDefaults.labelWidth + 5) + 'px',
+						src : '',
+						anchor : '100%',
+						listeners : {
+							click : {
+								element : 'el', // bind to the underlying el property on the panel
+								fn : function() {
+									this.dom.src = captchaUrl + new Date().getTime();
+								}
 							}
 						}
-					}
-				}, {
-					fieldLabel : t("login.form.password"),
-					name : 'password',
-					inputType : 'password',
-					listeners : {
-						specialkey : function(field, e) {
-							if (e.getKey() == e.ENTER) {
-								field.up('window').onSubmitClick();
-							}
-						}
-					}
-				}, {
-					fieldLabel : t("login.form.captcha"),
-					allowBlank : true,
-					name : 'captcha',
-					hidden : true,
-					listeners : {
-						specialkey : function(field, e) {
-							if (e.getKey() == e.ENTER) {
-								field.up('window').onSubmitClick();
-							}
-						}
-					}
-				}, {
-					xtype : 'image',
-					name : 'captchaImage',
-					itemId : 'captchaImage',
-					hidden : true,
-					alt : t("login.form.captcha"),
-					width : 150,
-					height : 35,
-					style : 'margin-left: 85px',
-					src : '',
-					listeners : {
-						click : {
-							element : 'el', // bind to the underlying el property on the panel
-							fn : function() {
-								this.dom.src = captchaUrl + new Date().getTime();
-							}
-						}
-					}
-				}],
-				/**
-				 * captcha image click event
-				 */
-				onCaptchaImageClick : function() {
-					this.dom.src = captchaUrl + new Date().getTime();
+					});
+					me.items = [me.username, me.password, me.captcha, me.captchaImage];
+					me.callParent(arguments);
 				}
 			});
 
 			Ext.define('Maty.Login.Window', {
 				extend : 'Ext.window.Window',
-				closeAction : 'hide',
+				// closeAction : 'hide',
 				layout : 'fit',
 				loginUrl : ctx + '/login',
 				loginSuccessUrl : ctx + '/',
 				border : false,
-				width : 270,
+				width : 'zh_CN' === lang.language ? 250 : 300,
 				closable : true,
 				modal : false,
 				plain : true,
@@ -98,25 +75,44 @@
 				categoryModel : null,
 				initComponent : function() {
 					var me = this;
-					me.form = Ext.create("Maty.Login.Form");
+					me.form = Ext.create('Maty.Login.Form');
 					// TODO:判断是否需要验证码，从cookie中取得
 					// add buttons
-					me.buttons = [{
-						text : t('login.window.botton.submit'),
-						handler : Ext.bind(me.onSubmitClick, me)
-					}, {
-						text : t('login.window.botton.reset'),
-						handler : Ext.bind(me.onResetClick, me)
-					}];
-					me.items = me.form;
-					// me.addEvents("save");
+
+					me.toolbar = Ext.create("Ext.toolbar.Toolbar", {
+						enableOverflow : false,
+						dock : 'bottom',
+						ui : 'footer',
+						defaults : {
+							minWidth : 80
+						},
+						items : [{
+							text : t('login.window.botton.submit'),
+							iconCls : 'add',
+							handler : Ext.bind(me.onSubmitClick, me)
+						}, {
+							text : t('login.window.botton.reset'),
+							iconCls : 'add',
+							handler : Ext.bind(me.onResetClick, me)
+						}]
+					});
+
+					Ext.apply(me, {
+						items : [me.form],
+						dockedItems : [me.toolbar]
+					});
+
 					me.callParent(arguments);
-					// me.on("show",
-					// Ext.bind(me.onShow, me));
+					me.on("render", me.assignEnterKey, me);
 				},
 				onShow : function() {
-					// focus on first item
-					this.form.items.first().focus(true, 200);
+					this.form.username.focus(true, 200);
+				},
+				/**
+				 * Assigns the enter key to the login window.
+				 */
+				assignEnterKey : function() {
+					this.getKeyMap().on(Ext.EventObject.ENTER, this.onSubmitClick, this);
 				},
 				/**
 				 * form submit
@@ -125,13 +121,12 @@
 					var me = this, form, password;
 					form = me.form.getForm();
 					if (form.isValid()) {
-						password = form.findField("password");
+						password = me.form.password.getValue();
 						// crypto password
-						password.setValue(CryptoJS.SHA256(CryptoJS.SHA256(password.getValue())));
+						me.form.password.setValue(password.length == 64 ? password : CryptoJS.SHA256(CryptoJS.SHA256(password)));
 						form.submit({
-							clientValidation : true,
-							waitMsg : '请稍后',
-							waitTitle : '正在验证登录',
+							waitMsg : t('login.window.waitmsg'),
+							waitTitle : t('login.window.waittitle'),
 							url : me.loginUrl,
 							success : Ext.bind(me.onFormSubmitSuccess, me),
 							failure : Ext.bind(me.onFormSubmitFailure, me)
@@ -143,6 +138,7 @@
 				 */
 				onResetClick : function() {
 					this.form.getForm().reset();
+					this.form.username.focus(true, 100);
 				},
 				/**
 				 * submit success
@@ -160,240 +156,72 @@
 				 * @param action
 				 */
 				onFormSubmitFailure : function(form, action) {
-					// if(action.result.)
-					this.showCaptcha();
+					var me = this;
 					Ext.MessageBox.show({
 						width : 150,
-						title : "登录失败",
+						title : t('login.failure.title'),
 						buttons : Ext.MessageBox.OK,
-						msg : action.result.msg
-					});
-				},
-				showCaptcha : function() {
-					var me = this, captcha;
-					captcha = me.form.getForm().findField("captcha");
-					if (captcha.isHidden()) {
-						// set widow more height
-						me.setHeight(me.getHeight() + 68);
-						captcha.show();
-						// don't allow blank
-						captcha.allowBlank = false;
-						// captcha.labelWidth = 120;
-						// show captcha image
-						me.onCaptchaImageClick();
-					}
-				},
-				/**
-				 * refresh the capthcha image
-				 */
-				onCaptchaImageClick : function() {
-					var me = this, captchaImage;
-					captchaImage = me.form.getComponent("captchaImage");
-					// if hidden，show it.
-					if (captchaImage.isHidden()) {
-						captchaImage.show();
-						captchaImage.el.dom.title = t("login.form.captcha.image.title");
-					}
-					// set url
-					captchaImage.setSrc(captchaUrl + new Date().getTime());
-
-				}
-			});
-
-			/**
-			 * Defines the login dialog
-			 */
-			Ext.define('PartKeepr.LoginDialog', {
-				extend : 'Ext.Window',
-				// closeAction : 'hide',
-				title : t('login.window.title'),
-				loginUrl : ctx + '/login',
-				loginSuccessUrl : ctx + '/',
-				width : 270,
-				height : 125,
-				modal : false,
-				resizable : true,
-				layout : 'anchor',
-				bodyStyle : 'padding: 5px;',
-				/**
-				 * Initializes the login dialog component
-				 */
-				initComponent : function() {
-					var me = this;
-					me.usernameField = Ext.create({
-						xtype : 'textfield',
-						// value : "",
-						fieldLabel : t("login.form.username"),
-						anchor : '100%'
-					});
-
-					me.passwordField = Ext.create({
-						xtype : 'textfield',
-						inputType : "password",
-						// value : "",
-						fieldLabel : t("login.form.password"),
-						anchor : '100%'
-					});
-
-					me.captchaField = Ext.create({
-						xtype : 'textfield',
-						// value : "",
-						allowBlank : true,
-						hidden : true,
-						fieldLabel : t("login.form.captcha"),
-						anchor : '100%'
-					});
-					me.captchaImageField = Ext.create({
-						xtype : 'box', // 或者xtype: 'component',
-						width : 150, // 图片宽度
-						height : 35, // 图片高度
-						hidden : true,
-						style : 'margin-left: 75px',
-						autoEl : {
-							tag : 'img', // 指定为img标签
-							alt : t("login.form.captcha"),
-							title : t("login.form.captcha.image.title"),
-							onclick : "javacript:$(this).hide().attr('src', " + ctx + "'/captcha.jpg?' " + new Date().getTime() + ").fadeIn();",
-							src : ctx + '/captcha.jpg?' + new Date().getTime()// 指定url路径
-						},
-						anchor : '100%'
-					});
-					me.toolbar = Ext.create({
-						xtype : 'toolbar',
-						enableOverflow : false,
-						dock : 'bottom',
-						defaults : {
-							minWidth : 50
-						},
-						items : [{
-							text : t('login.window.botton.submit'),
-							handler : Ext.bind(me.onSubmitClick, me)
-						}, {
-							text : t('login.window.botton.reset'),
-							handler : Ext.bind(me.onResetClick, me)
-						}]
-					});
-
-					Ext.apply(me, {
-						items : [me.loginField, me.passwordField, me.captchaField, me.captchaImageField],
-						dockedItems : [me.toolbar]
-					});
-
-					me.callParent(arguments);
-
-					me.on("render", me.assignEnterKey, me);
-					// Focus the login field on show
-					// @workaround Set the focus 100ms after the dialog has been shown.
-					me.on("show", function() {
-						me.usernameField.focus();
-					}, me, {
-						delay : 100
-					});
-				},
-				/**
-				 * Assigns the enter key to the login window.
-				 */
-				assignEnterKey : function() {
-					var keyMap = this.getKeyMap();
-					keyMap.on(Ext.EventObject.ENTER, this.onSubmitClick, this);
-				},
-				/**
-				 * Fires the "login" event
-				 */
-				login : function() {
-					this.fireEvent("login", this.loginField.getValue(), this.passwordField.getValue());
-				},
-				/**
-				 * form submit
-				 */
-				onSubmitClick : function() {
-					var me = this;
-					if (me.usernameField.isValid() && me.passwordField.isValid() && me.captchaField.isValid()) {
-						form.submit({
-							clientValidation : true,
-							waitMsg : '请稍后',
-							waitTitle : '正在验证登录',
-							url : me.loginUrl,
-							success : Ext.bind(me.onFormSubmitSuccess, me),
-							failure : Ext.bind(me.onFormSubmitFailure, me)
-						});
-						Ext.Ajax.request({
-							url : me.loginUrl,
-							success : Ext.bind(me.onFormSubmitSuccess, me),
-							failure : Ext.bind(me.onFormSubmitFailure, me),
-							method : "POST",
-							params : {
-								username : me.usernameField.getValue(),
-								password : CryptoJS.SHA256(CryptoJS.SHA256(me.passwordField.getValue()))
+						icon : Ext.MessageBox.ERROR,
+						fn : function(btn) {
+							if (btn == 'ok' || btn == 'cancel') {
+								me.onBoxClose(action.result);
 							}
-						});
-					}
-				},
-				/**
-				 * form reset
-				 */
-				onResetClick : function() {
-					this.form.getForm().reset();
-				},
-				/**
-				 * submit success
-				 * 
-				 * @param form
-				 * @param action
-				 */
-				onFormSubmitSuccess : function(form, action) {
-					location.href = this.loginSuccessUrl;
-				},
-				/**
-				 * submit failure
-				 * 
-				 * @param form
-				 * @param action
-				 */
-				onFormSubmitFailure : function(form, action) {
-					// if(action.result.)
-					this.showCaptcha();
-					Ext.MessageBox.show({
-						width : 150,
-						title : "登录失败",
-						buttons : Ext.MessageBox.OK,
-						msg : action.result.msg
+						},
+						msg : t(action.result.msg)
 					});
+				},
+				onBoxClose : function(result) {
+					var me = this, captchaImage = me.form.captchaImage;
+					if (result.msg.indexOf('username.null') !== -1) {
+						me.form.username.focus(true, 100);
+					} else if (result.msg.indexOf('captcha') !== -1) {
+						me.showCaptcha();
+						me.form.captcha.focus(true, 100);
+					} else if (result.msg.indexOf('password') !== -1) {
+						if (!captchaImage.isHidden()) {
+							me.onCaptchaImageClick();
+						}
+						me.form.password.focus(true, 100);
+					} else if (result.msg.indexOf('account') !== -1) {
+						if (!captchaImage.isHidden()) {
+							me.onCaptchaImageClick();
+						}
+						me.form.password.reset();
+						me.form.username.focus(true, 100);
+					}
 				},
 				showCaptcha : function() {
 					var me = this, captcha;
-					captcha = me.form.getForm().findField("captcha");
+					captcha = me.form.captcha;
 					if (captcha.isHidden()) {
 						// set widow more height
-						me.setHeight(me.getHeight() + 68);
+						me.setHeight(me.getHeight() + 60);
 						captcha.show();
 						// don't allow blank
 						captcha.allowBlank = false;
 						// captcha.labelWidth = 120;
 						// show captcha image
-						me.onCaptchaImageClick();
 					}
+					me.onCaptchaImageClick();
 				},
 				/**
 				 * refresh the capthcha image
 				 */
 				onCaptchaImageClick : function() {
-					var me = this, captchaImage;
-					captchaImage = me.form.getComponent("captchaImage");
+					var me = this, captchaImage = me.form.captchaImage;
 					// if hidden，show it.
 					if (captchaImage.isHidden()) {
 						captchaImage.show();
 						captchaImage.el.dom.title = t("login.form.captcha.image.title");
 					}
+					me.form.captcha.reset();
 					// set url
 					captchaImage.setSrc(captchaUrl + new Date().getTime());
-
 				}
 			});
 
 			Ext.create("Maty.Login.Window").show();
-			// Ext.create("PartKeepr.LoginDialog").show();
-	});
+		});
 	});
 
 }());
