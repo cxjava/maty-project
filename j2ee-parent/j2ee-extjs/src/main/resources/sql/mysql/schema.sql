@@ -57,6 +57,7 @@ CREATE TABLE t_base_user (
   salt varchar(128) NOT NULL,
   real_name varchar(64) DEFAULT NULL COMMENT '用户真实姓名',
   sex int(1) unsigned DEFAULT NULL COMMENT '性别 0:男 1:女',
+  status varchar(32)  DEFAULT '0' COMMENT '0:active,1:locked',
   email varchar(64) DEFAULT NULL COMMENT '电子邮件地址',
   mobile varchar(32) DEFAULT NULL COMMENT '手机',
   office_phone varchar(32) DEFAULT NULL COMMENT '办公电话',

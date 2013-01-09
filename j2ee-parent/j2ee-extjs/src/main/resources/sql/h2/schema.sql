@@ -46,6 +46,7 @@ CREATE TABLE t_base_user (
   salt varchar(128) NOT NULL,
   real_name varchar(64) DEFAULT NULL ,
   sex int(1)  DEFAULT NULL ,
+  status varchar(32)  DEFAULT '0' ,
   email varchar(64) DEFAULT NULL ,
   mobile varchar(32) DEFAULT NULL ,
   office_phone varchar(32) DEFAULT NULL ,

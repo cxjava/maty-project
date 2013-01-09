@@ -26,6 +26,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -88,13 +89,11 @@ public class ShiroRealm extends AuthorizingRealm {
 			Object sessionCaptcha = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
 			if (null == sessionCaptcha) {
 				LOG.error("The captcha is invalid! Please re-enter the new captcha!");
-				throw new CaptchaException("The captcha is invalid! Please re-enter the new captcha!",
-						"login.captcha.overdue");
+				throw new CaptchaException("The captcha is invalid! Please re-enter the new captcha!", "login.captcha.overdue");
 			}
 			if (!token.getCaptcha().equalsIgnoreCase((String) sessionCaptcha)) {
 				LOG.error("The captcha is not correct, please enter again!");
-				throw new CaptchaException("The captcha is not correct, please enter again!",
-						"login.captcha.wrong");
+				throw new CaptchaException("The captcha is not correct, please enter again!", "login.captcha.incorrect");
 			}
 			// 移除验证码，不能用同一个验证码重复提交来试探密码
 			session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
@@ -103,7 +102,11 @@ public class ShiroRealm extends AuthorizingRealm {
 		if (StringUtils.isBlank(user.getPassword())) {
 			throw new UnknownAccountException("No account found for user [" + user.getAccount() + "]");
 		}
-
+		// 0:active,1:locked
+		if ("1".equals(user.getStatus())) {
+			throw new LockedAccountException("The account for username " + user.getAccount() + " is locked.  "
+					+ "Please contact your administrator to unlock it.");
+		}
 		return new SimpleAuthenticationInfo(new ShiroUser(user.getAccount(), user.getRealName()), user.getPassword(),
 				ByteSource.Util.bytes(Hex.decode(user.getSalt())), getName());
 	}

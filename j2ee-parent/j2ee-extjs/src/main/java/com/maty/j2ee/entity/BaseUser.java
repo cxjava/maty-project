@@ -28,6 +28,8 @@ public class BaseUser extends IdEntity {
 	/** nick name */
 	private String realName;
 	private Integer sex;
+	/** 0:active,1:locked */
+	private String status;
 	private String email;
 	private String mobile;
 	private String officePhone;
@@ -110,6 +112,21 @@ public class BaseUser extends IdEntity {
 	 */
 	public void setSex(Integer sex) {
 		this.sex = sex;
+	}
+
+	/**
+	 * @return the status 0:active,1:locked
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set 0:active,1:locked
+	 */
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	/**

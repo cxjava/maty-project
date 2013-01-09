@@ -97,28 +97,23 @@ public class LoginController {
 		if ("com.maty.j2ee.exception.LoginException".equals(shiroLoginFailureClass)) {
 			// username is null or blank
 			return new ExtReturn(errorCode);
-
 		} else if ("com.maty.j2ee.exception.CaptchaException".equals(shiroLoginFailureClass)) {
-			// TODO:添加cookie，需要captcha
 			return new ExtReturn(errorCode);
-
 		} else if ("org.apache.shiro.authc.UnknownAccountException".equals(shiroLoginFailureClass)) {
 			// 用户名不存在
-			return new ExtReturn("login.account.error");
-
+			return new ExtReturn("login.username.unknown");
 		} else if ("org.apache.shiro.authc.IncorrectCredentialsException".equals(shiroLoginFailureClass)) {
 			// 密码不正确
-			// TODO:更新登录错误次数
+			// TODO:更新登录错误次数，达到一定次数锁定帐户
 			return new ExtReturn("login.password.incorrect");
-
 		} else if ("org.apache.shiro.authc.LockedAccountException".equals(shiroLoginFailureClass)) {
 			// account for that username is locked - can't login. Show them a message?
-			return new ExtReturn("login.account.error");
+			return new ExtReturn("login.account.locked");
 		} else if ("org.apache.shiro.authc.AuthenticationException".equals(shiroLoginFailureClass)) {
 			// unexpected condition - error?
-			return new ExtReturn("login.account.error");
+			return new ExtReturn("login.system.error");
 		} else if ("org.apache.shiro.authc.AccountException".equals(shiroLoginFailureClass)) {
-			return new ExtReturn("login.account.error");
+			return new ExtReturn("login.system.error");
 		} else {
 			LOG.error(shiroLoginFailureClass);
 			return new ExtReturn("login.system.error");
