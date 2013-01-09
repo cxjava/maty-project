@@ -158,7 +158,7 @@
 				onFormSubmitFailure : function(form, action) {
 					var me = this;
 					Ext.MessageBox.show({
-						width : 150,
+						width : 170,
 						title : t('login.failure.title'),
 						buttons : Ext.MessageBox.OK,
 						icon : Ext.MessageBox.ERROR,
@@ -173,6 +173,8 @@
 				onBoxClose : function(result) {
 					var me = this, captchaImage = me.form.captchaImage;
 					if (result.msg.indexOf('username.null') !== -1) {
+						me.form.captcha.reset();
+						me.form.password.reset();
 						me.form.username.focus(true, 100);
 					} else if (result.msg.indexOf('captcha') !== -1) {
 						me.showCaptcha();

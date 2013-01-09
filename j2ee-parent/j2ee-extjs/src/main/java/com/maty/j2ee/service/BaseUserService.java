@@ -16,4 +16,12 @@ public interface BaseUserService {
 	 */
 	BaseUser findUserByLoginName(String account);
 
+	/**
+	 * user login error,and update the user error count.
+	 * 
+	 * @param userName
+	 *            account name
+	 */
+	void updateUserErrorCount(String userName);
+
 }

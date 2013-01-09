@@ -40,6 +40,7 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.code.kaptcha.Constants;
@@ -58,7 +59,8 @@ import com.maty.j2ee.exception.LoginException;
 public class ShiroRealm extends AuthorizingRealm {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ShiroRealm.class);
-
+	@Value("${need.captcha.error.count:4}")
+	private Integer captchaErrorCount;
 	private BaseUserService baseUserService;
 
 	/**
@@ -78,8 +80,7 @@ public class ShiroRealm extends AuthorizingRealm {
 			return null;
 		}
 		// 当错误次数达到一定时候需要验证码
-		// TODO:调回正常值
-		if (user.getErrorCount() >= 0) {
+		if (user.getErrorCount() >= captchaErrorCount) {
 			if (StringUtils.isBlank(token.getCaptcha())) {
 				LOG.error("Null captcha is not allowed by this realm.");
 				throw new CaptchaException("Null captcha is not allowed by this realm.", "login.captcha.null");
@@ -102,6 +103,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		if (StringUtils.isBlank(user.getPassword())) {
 			throw new UnknownAccountException("No account found for user [" + user.getAccount() + "]");
 		}
+		LOG.debug(user.getStatus());
 		// 0:active,1:locked
 		if ("1".equals(user.getStatus())) {
 			throw new LockedAccountException("The account for username " + user.getAccount() + " is locked.  "

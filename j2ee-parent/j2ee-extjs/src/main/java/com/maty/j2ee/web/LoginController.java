@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.maty.j2ee.entity.ext.ExtReturn;
+import com.maty.j2ee.service.BaseUserService;
 import com.maty.j2ee.shiro.CaptchaFormAuthenticationFilter;
+import com.maty.j2ee.shiro.ShiroRealm.ShiroUser;
 
 /**
  * LoginController负责打开登录页面(GET请求)和登录出错页面(POST请求)，
@@ -45,6 +49,8 @@ public class LoginController {
 	private String availLanguages;
 	/** verification code */
 	private Producer captchaProducer = null;
+	@Autowired
+	private BaseUserService baseUserService;
 
 	/**
 	 * @param captchaProducer
@@ -105,6 +111,7 @@ public class LoginController {
 		} else if ("org.apache.shiro.authc.IncorrectCredentialsException".equals(shiroLoginFailureClass)) {
 			// 密码不正确
 			// TODO:更新登录错误次数，达到一定次数锁定帐户
+			baseUserService.updateUserErrorCount(userName);
 			return new ExtReturn("login.password.incorrect");
 		} else if ("org.apache.shiro.authc.LockedAccountException".equals(shiroLoginFailureClass)) {
 			// account for that username is locked - can't login. Show them a message?
@@ -130,6 +137,10 @@ public class LoginController {
 	@RequestMapping("/loginSuccess")
 	@ResponseBody
 	public Object loginSuccess() {
+		Subject currentUser = SecurityUtils.getSubject();
+		ShiroUser user = (ShiroUser) currentUser.getPrincipal();
+		
+		// TODO:更新错误次数为0
 		return new ExtReturn(true, "login success!");
 	}
 
