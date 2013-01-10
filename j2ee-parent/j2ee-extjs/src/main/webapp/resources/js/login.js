@@ -76,9 +76,6 @@
 				initComponent : function() {
 					var me = this;
 					me.form = Ext.create('Maty.Login.Form');
-					// TODO:判断是否需要验证码，从cookie中取得
-					// add buttons
-
 					me.toolbar = Ext.create("Ext.toolbar.Toolbar", {
 						enableOverflow : false,
 						dock : 'bottom',
@@ -88,11 +85,11 @@
 						},
 						items : [{
 							text : t('login.window.botton.submit'),
-							iconCls : 'add',
+							iconCls : 'submit',
 							handler : Ext.bind(me.onSubmitClick, me)
 						}, {
 							text : t('login.window.botton.reset'),
-							iconCls : 'add',
+							iconCls : 'reset',
 							handler : Ext.bind(me.onResetClick, me)
 						}]
 					});
@@ -107,12 +104,20 @@
 				},
 				onShow : function() {
 					this.form.username.focus(true, 200);
+					this.needCaptcha();
 				},
 				/**
 				 * Assigns the enter key to the login window.
 				 */
 				assignEnterKey : function() {
 					this.getKeyMap().on(Ext.EventObject.ENTER, this.onSubmitClick, this);
+				},
+				needCaptcha : function() {
+					// jadge need show captcha field?
+					var _captcha = Ext.util.Cookies.get('_captcha');
+					if (_captcha && _captcha !== '') {
+						this.showCaptcha();
+					}
 				},
 				/**
 				 * form submit
@@ -172,7 +177,10 @@
 				},
 				onBoxClose : function(result) {
 					var me = this, captchaImage = me.form.captchaImage;
-					if (result.msg.indexOf('username.null') !== -1) {
+					if (result.msg.indexOf('username') !== -1) {
+						if (!captchaImage.isHidden()) {
+							me.onCaptchaImageClick();
+						}
 						me.form.captcha.reset();
 						me.form.password.reset();
 						me.form.username.focus(true, 100);
@@ -180,15 +188,19 @@
 						me.showCaptcha();
 						me.form.captcha.focus(true, 100);
 					} else if (result.msg.indexOf('password') !== -1) {
-						if (!captchaImage.isHidden()) {
-							me.onCaptchaImageClick();
-						}
+						me.needCaptcha();
 						me.form.password.focus(true, 100);
 					} else if (result.msg.indexOf('account') !== -1) {
 						if (!captchaImage.isHidden()) {
 							me.onCaptchaImageClick();
 						}
 						me.form.password.reset();
+						me.form.username.focus(true, 100);
+					} else {
+						if (!captchaImage.isHidden()) {
+							me.onCaptchaImageClick();
+						}
+						me.form.getForm().reset();
 						me.form.username.focus(true, 100);
 					}
 				},

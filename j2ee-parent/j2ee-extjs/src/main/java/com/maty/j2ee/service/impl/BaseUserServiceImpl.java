@@ -32,18 +32,20 @@ public class BaseUserServiceImpl implements BaseUserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void updateUserErrorCount(String userName) {
+	public BaseUser updateUserErrorCount(String userName) {
 		BaseUser user = userRepository.findByAccount(userName);
 		Integer errorCount = user.getErrorCount();
 		LOG.debug("errorCount:{}", errorCount);
 		LOG.debug("user.getStatus():{}", user.getStatus());
-		if (errorCount >= maxErrorCount) {
+		// when error count reach max error count,the account will be locked
+		if (errorCount >= (maxErrorCount - 1)) {
 			// 0:active,1:locked
 			user.setStatus("1");
 		}
 		errorCount = errorCount + 1;
 		user.setErrorCount(errorCount);
 		userRepository.save(user);
+		return user;
 	}
 
 	@Override

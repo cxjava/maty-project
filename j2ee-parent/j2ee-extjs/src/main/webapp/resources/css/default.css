@@ -1,3 +1,6 @@
-.add {
-  background-image:url(../images/icons/add.png)!important;background-repeat:no-repeat;
+.submit {
+  background-image:url(../images/icons/accept.png)!important;background-repeat:no-repeat;
+}
+.reset {
+  background-image:url(../images/icons/arrow_refresh.png)!important;background-repeat:no-repeat;
 }

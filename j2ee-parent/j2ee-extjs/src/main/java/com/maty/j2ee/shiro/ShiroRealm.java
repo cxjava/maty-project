@@ -103,7 +103,6 @@ public class ShiroRealm extends AuthorizingRealm {
 		if (StringUtils.isBlank(user.getPassword())) {
 			throw new UnknownAccountException("No account found for user [" + user.getAccount() + "]");
 		}
-		LOG.debug(user.getStatus());
 		// 0:active,1:locked
 		if ("1".equals(user.getStatus())) {
 			throw new LockedAccountException("The account for username " + user.getAccount() + " is locked.  "

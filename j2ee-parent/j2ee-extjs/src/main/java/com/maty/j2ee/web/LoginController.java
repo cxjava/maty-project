@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.authc.AuthenticationFilter;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.CookieGenerator;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import com.maty.j2ee.entity.BaseUser;
 import com.maty.j2ee.entity.ext.ExtReturn;
 import com.maty.j2ee.service.BaseUserService;
 import com.maty.j2ee.shiro.CaptchaFormAuthenticationFilter;
@@ -44,13 +48,19 @@ import com.maty.j2ee.shiro.ShiroRealm.ShiroUser;
 @Controller
 public class LoginController {
 	private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
+	private static final String COOKIE_NAME = "_captcha";
+	private static final Integer COOKIE_MAX_AGE = 2 * 60 * 60;
 	/** system support languages */
 	@Value("${avail.languages:en,de,zh}")
 	private String availLanguages;
+	@Value("${need.captcha.error.count:4}")
+	private Integer captchaErrorCount;
 	/** verification code */
 	private Producer captchaProducer = null;
 	@Autowired
 	private BaseUserService baseUserService;
+	@Autowired
+	private CookieGenerator generator;
 
 	/**
 	 * @param captchaProducer
@@ -68,7 +78,12 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(Locale locale, Model model) {
+	public String login(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+		Subject currentUser = SecurityUtils.getSubject();
+		// if user had login success,then redirect to home page
+		if (null != currentUser.getPrincipal() && currentUser.getPrincipal() instanceof ShiroUser) {
+			return "redirect:" + AuthenticationFilter.DEFAULT_SUCCESS_URL;
+		}
 		// judge the locale is or not in the default languages.
 		if (!ArrayUtils.contains(StringUtils.split(availLanguages, ','), locale.getLanguage())) {
 			// if not,get the first language from configuration file as a default language
@@ -111,7 +126,10 @@ public class LoginController {
 		} else if ("org.apache.shiro.authc.IncorrectCredentialsException".equals(shiroLoginFailureClass)) {
 			// 密码不正确
 			// TODO:更新登录错误次数，达到一定次数锁定帐户
-			this.baseUserService.updateUserErrorCount(userName);
+			BaseUser user = this.baseUserService.updateUserErrorCount(userName);
+			if (user.getErrorCount() >= captchaErrorCount) {
+				response.addCookie(createCookie());
+			}
 			return new ExtReturn("login.password.incorrect");
 		} else if ("org.apache.shiro.authc.LockedAccountException".equals(shiroLoginFailureClass)) {
 			// account for that username is locked - can't login. Show them a message?
@@ -135,11 +153,14 @@ public class LoginController {
 	 */
 	@RequestMapping("/loginSuccess")
 	@ResponseBody
-	public Object loginSuccess() {
+	public Object loginSuccess(HttpServletResponse response) {
 		Subject currentUser = SecurityUtils.getSubject();
 		ShiroUser user = (ShiroUser) currentUser.getPrincipal();
 		// update the error count to zero
 		this.baseUserService.resetUserErrorCount(user.getLoginName());
+		Cookie cookie = createCookie();
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
 		return new ExtReturn(true, "login success!");
 	}
 
@@ -186,4 +207,9 @@ public class LoginController {
 		return null;
 	}
 
+	private Cookie createCookie() {
+		Cookie cookie = new Cookie(COOKIE_NAME, "true");
+		cookie.setMaxAge(COOKIE_MAX_AGE);
+		return cookie;
+	}
 }

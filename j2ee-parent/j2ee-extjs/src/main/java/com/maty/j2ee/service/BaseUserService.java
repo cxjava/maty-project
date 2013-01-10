@@ -22,7 +22,7 @@ public interface BaseUserService {
 	 * @param userName
 	 *            account name
 	 */
-	void updateUserErrorCount(String userName);
+	BaseUser updateUserErrorCount(String userName);
 
 	/**
 	 * user login success,and update the user error count to zero.

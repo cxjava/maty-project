@@ -95,7 +95,7 @@ public class CaptchaFormAuthenticationFilter extends FormAuthenticationFilter {
 
 		if (!"XMLHttpRequest".equalsIgnoreCase(httpServletRequest.getHeader("X-Requested-With"))) {
 			LOG.debug("it is not an ajax request.");
-			httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + this.getSuccessUrl());
+			 WebUtils.redirectToSavedRequest(request, response, getSuccessUrl());
 		} else {
 			LOG.debug("it's an ajax request.");
 			httpServletRequest.getRequestDispatcher(this.getSuccessUrl()).forward(httpServletRequest, httpServletResponse);
