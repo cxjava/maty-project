@@ -12,7 +12,7 @@ import com.maty.j2ee.Base;
 import com.maty.j2ee.entity.BaseRole;
 
 public class BaseRoleRepositoryTest extends Base {
-	private static final Logger logger = LoggerFactory.getLogger(BaseRoleRepositoryTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BaseRoleRepositoryTest.class);
 	@Autowired
 	private BaseRoleRepository repository;
 	private BaseRole baseRole;
@@ -27,23 +27,8 @@ public class BaseRoleRepositoryTest extends Base {
 	@Test
 	public void testSave() {
 		baseRole = repository.save(baseRole);
+		LOG.debug("baseRole : {}.", baseRole);
 		assertNotNull(baseRole);
-	}
-
-	@Test
-	public void testFindOne() {
-		baseRole = repository.findOne(1L);
-		logger.info("role:{}", baseRole);
-		assertNotNull(baseRole);
-		assertEquals(baseRole.getRoleName(), "管理员");
-	}
-
-	@Test
-	public void testFindManyToMany() {
-		baseRole = repository.findOne(1L);
-		logger.info("role:{}", baseRole);
-		assertNotNull(baseRole);
-		assertEquals(baseRole.getRoleName(), "管理员");
 	}
 
 }

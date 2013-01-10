@@ -14,7 +14,7 @@ import com.maty.j2ee.Base;
 import com.maty.j2ee.entity.BaseUser;
 
 public class BaseUserRepositoryTest extends Base {
-	private static final Logger logger = LoggerFactory.getLogger(BaseUserRepositoryTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BaseUserRepositoryTest.class);
 	@Autowired
 	private BaseUserRepository repository;
 	private BaseUser baseUser;
@@ -22,31 +22,19 @@ public class BaseUserRepositoryTest extends Base {
 	@Before
 	public void before() {
 		baseUser = new BaseUser();
-		baseUser.setAccount("LiHuai");
-		baseUser.setRealName("李坏");
+		baseUser.setAccount("cx");
+		baseUser.setRealName("cx");
 		baseUser.setPassword("123456");
 		baseUser.setSalt("123456");
 		baseUser.setLastLoginTime(new Date());
 	}
 
 	@Test
-	public void testSave() {
-		baseUser = repository.save(baseUser);
+	public void testFindByAccount() {
+		baseUser = repository.findByAccount("admin");
 		assertNotNull(baseUser);
+		LOG.debug("baseUser : {}.", baseUser);
+		assertEquals(baseUser.getStatus(), "0");
 	}
 
-	@Test
-	public void testFindOne() {
-		baseUser = repository.findOne(1L);
-		logger.info("user:{}", baseUser);
-		assertNotNull(baseUser);
-		assertEquals(baseUser.getAccount(), "admin");
-	}
-
-	@Test
-	public void testFindManyToMany() {
-		baseUser = repository.findOne(1L);
-		logger.info("user:{}", baseUser);
-		assertNotNull(baseUser);
-	}
 }
