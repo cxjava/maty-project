@@ -26,7 +26,7 @@ public class Temp extends Base {
 	}
 
 	@Test
-	public void testUpdateUserErrorCount() {
+	public void updateUserErrorCount() {
 		// assertNotNull(user);
 		// assertEquals(user.getStatus(), "1");
 		// assertTrue(user.getErrorCount() == 11);

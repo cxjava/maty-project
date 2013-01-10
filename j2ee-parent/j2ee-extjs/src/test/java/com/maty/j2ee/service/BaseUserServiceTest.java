@@ -34,8 +34,7 @@ public class BaseUserServiceTest extends Base {
 	}
 
 	@Test
-	public void testFindUserByLoginName() {
-		LOG.debug("user : {}.", user);
+	public void findUserByLoginName() {
 		user = userService.findUserByLoginName("admin");
 		assertNotNull(user);
 		LOG.debug("user : {}.", user);
@@ -43,8 +42,7 @@ public class BaseUserServiceTest extends Base {
 	}
 
 	@Test
-	public void testUpdateUserErrorCount() {
-		LOG.debug("user : {}.", user);
+	public void updateUserErrorCount() {
 		String account = "admin";
 		user = repository.findByAccount(account);
 		user.setErrorCount(10);
@@ -58,8 +56,7 @@ public class BaseUserServiceTest extends Base {
 	}
 
 	@Test
-	public void testResetUserErrorCount() {
-		LOG.debug("user : {}.", user);
+	public void resetUserErrorCount() {
 		String account = "admin";
 		userService.resetUserErrorCount(account);
 		user = repository.findByAccount(account);

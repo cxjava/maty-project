@@ -25,7 +25,7 @@ public class BaseRoleRepositoryTest extends Base {
 	}
 
 	@Test
-	public void testSave() {
+	public void save() {
 		baseRole = repository.save(baseRole);
 		LOG.debug("baseRole : {}.", baseRole);
 		assertNotNull(baseRole);

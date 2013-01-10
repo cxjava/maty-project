@@ -34,7 +34,7 @@ public class BaseModuleRepositoryTest extends Base {
 	}
 
 	@Test
-	public void testSelectAllModules() {
+	public void selectAllModules() {
 		HashMap<String, Object> parameters = Maps.newHashMap();
 		List<BaseModule> list = repositoryimpl.findAllModules(parameters);
 		assertNotNull(list);

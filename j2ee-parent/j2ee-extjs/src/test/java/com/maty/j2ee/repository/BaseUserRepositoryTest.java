@@ -30,7 +30,7 @@ public class BaseUserRepositoryTest extends Base {
 	}
 
 	@Test
-	public void testFindByAccount() {
+	public void findByAccount() {
 		baseUser = repository.findByAccount("admin");
 		assertNotNull(baseUser);
 		LOG.debug("baseUser : {}.", baseUser);
