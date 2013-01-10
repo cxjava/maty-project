@@ -6,5 +6,5 @@ import java.util.Map;
 import com.maty.j2ee.entity.BaseModule;
 
 public interface BaseModuleRepositoryDao {
-	List<BaseModule> selectAllModules(Map<String, Object> parameters);
+	List<BaseModule> findAllModules(Map<String, Object> parameters);
 }

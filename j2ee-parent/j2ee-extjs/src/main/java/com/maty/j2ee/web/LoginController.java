@@ -98,8 +98,8 @@ public class LoginController {
 			HttpServletRequest request, HttpServletResponse response) {
 		String shiroLoginFailureClass = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 		String errorCode = (String) request.getAttribute(CaptchaFormAuthenticationFilter.DEFAULT_ERROR_CODE_PARAM);
-		LOG.warn("shiroLoginFailureClass is {}.", shiroLoginFailureClass);
-		LOG.warn("errorCode is {}.", errorCode);
+		LOG.error("shiroLoginFailureClass is {}.", shiroLoginFailureClass);
+		LOG.error("errorCode is {}.", errorCode);
 		if ("com.maty.j2ee.exception.LoginException".equals(shiroLoginFailureClass)) {
 			// username is null or blank
 			return new ExtReturn(errorCode);
@@ -111,7 +111,7 @@ public class LoginController {
 		} else if ("org.apache.shiro.authc.IncorrectCredentialsException".equals(shiroLoginFailureClass)) {
 			// 密码不正确
 			// TODO:更新登录错误次数，达到一定次数锁定帐户
-			baseUserService.updateUserErrorCount(userName);
+			this.baseUserService.updateUserErrorCount(userName);
 			return new ExtReturn("login.password.incorrect");
 		} else if ("org.apache.shiro.authc.LockedAccountException".equals(shiroLoginFailureClass)) {
 			// account for that username is locked - can't login. Show them a message?
@@ -122,7 +122,6 @@ public class LoginController {
 		} else if ("org.apache.shiro.authc.AccountException".equals(shiroLoginFailureClass)) {
 			return new ExtReturn("login.system.error");
 		} else {
-			LOG.error(shiroLoginFailureClass);
 			return new ExtReturn("login.system.error");
 		}
 	}
@@ -139,8 +138,8 @@ public class LoginController {
 	public Object loginSuccess() {
 		Subject currentUser = SecurityUtils.getSubject();
 		ShiroUser user = (ShiroUser) currentUser.getPrincipal();
-		
-		// TODO:更新错误次数为0
+		// update the error count to zero
+		this.baseUserService.resetUserErrorCount(user.getLoginName());
 		return new ExtReturn(true, "login success!");
 	}
 

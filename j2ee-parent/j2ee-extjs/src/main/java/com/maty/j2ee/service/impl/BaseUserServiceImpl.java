@@ -45,4 +45,12 @@ public class BaseUserServiceImpl implements BaseUserService {
 		user.setErrorCount(errorCount);
 		userRepository.save(user);
 	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void resetUserErrorCount(String userName) {
+		BaseUser user = userRepository.findByAccount(userName);
+		user.setErrorCount(0);
+		userRepository.save(user);
+	}
 }

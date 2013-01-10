@@ -24,4 +24,12 @@ public interface BaseUserService {
 	 */
 	void updateUserErrorCount(String userName);
 
+	/**
+	 * user login success,and update the user error count to zero.
+	 * 
+	 * @param userName
+	 *            account name
+	 */
+	void resetUserErrorCount(String userName);
+
 }

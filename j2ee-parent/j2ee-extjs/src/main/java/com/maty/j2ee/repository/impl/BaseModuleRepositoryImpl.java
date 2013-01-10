@@ -30,7 +30,7 @@ public class BaseModuleRepositoryImpl implements BaseModuleRepositoryDao {
 	}
 
 	@Override
-	public List<BaseModule> selectAllModules(Map<String, Object> parameters) {
+	public List<BaseModule> findAllModules(Map<String, Object> parameters) {
 		CriteriaQuery<BaseModule> criteriaQuery = em.getCriteriaBuilder().createQuery(BaseModule.class);
 		Root<BaseModule> variableRoot = criteriaQuery.from(BaseModule.class);
 		criteriaQuery.select(variableRoot);
