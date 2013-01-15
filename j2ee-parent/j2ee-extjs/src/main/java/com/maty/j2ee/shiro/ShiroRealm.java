@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.code.kaptcha.Constants;
+import com.google.common.collect.ImmutableList;
 import com.maty.j2ee.entity.BaseUser;
 import com.maty.j2ee.service.BaseUserService;
 import com.maty.j2ee.exception.CaptchaException;
@@ -121,6 +122,9 @@ public class ShiroRealm extends AuthorizingRealm {
 		BaseUser user = baseUserService.findUserByLoginName(shiroUser.loginName);
 
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+		String permissions="user:view,user:edit,user:all";
+		 info.addStringPermissions(ImmutableList.copyOf(StringUtils.split(permissions, ",")));
+		
 		// for (Role role : user.get()) {
 		// //基于Role的权限信息
 		// info.addRole(role.getName());

@@ -104,7 +104,10 @@ public class LoginController {
 	 * login failed,and return back the page
 	 * 
 	 * @param userName
+	 * @param locale
 	 * @param model
+	 * @param request
+	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -161,7 +164,19 @@ public class LoginController {
 		Cookie cookie = createCookie();
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
+		//登录后，可以用如下方式取得session  
+//		SecurityUtils.getSubject().getSession().setTimeout(30000);  
 		return new ExtReturn(true, "login success!");
+	}
+	/**
+	 * session timeout use by ajax 
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/timeOut")
+	@ResponseBody
+	public Object timeOut(HttpServletResponse response) {
+		return new ExtReturn(false, "time out!");
 	}
 
 	/**

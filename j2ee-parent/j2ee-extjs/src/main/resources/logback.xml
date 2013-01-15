@@ -32,6 +32,7 @@
 	<logger name="org.hibernate.SQL" level="DEBUG" />
 	<!-- <logger name="org.springframework.web.servlet.mvc.method.annotation" level="ERROR" /> -->
 	
+	<logger name="org.apache.shiro" level="DEBUG" />
 	<logger name="com.maty.j2ee" level="DEBUG" >
     	<!-- <appender-ref ref="DB" /> -->
 	</logger>

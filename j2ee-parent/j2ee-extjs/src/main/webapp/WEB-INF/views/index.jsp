@@ -36,6 +36,7 @@ body {
 		<li>CSS 大装修完毕。</li>
 		<li>CXF的SOAP WebService 与 MyBais从Mini-Service搬了过来</li>
 		<li>Shiro的授权演示搬了过来</li>
+		<button type="submit" class="btn" id="search_btn">Search</button>
 	</ul>
 	<script type="text/javascript">
 	(function () {
@@ -56,6 +57,14 @@ body {
 				// remove load prompt
 				// execute the login.js
 				//yepnope.injectJs('${ctx}/resources/js/login.js', null, {}, 3e4);// 30s
+				$("#search_btn").click(function(){
+					$.ajax({
+						url:"${ctx}/user/alls", 
+						dataType:"json",
+						success:function(data) {
+							console.log(data);
+					}});
+				});
 			}
 		});
 	}());

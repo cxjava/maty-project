@@ -20,6 +20,9 @@
 		<property name="baseUserService" ref="baseUserServiceImpl"/>
 		<property name="credentialsMatcher" ref="sha512Matcher"/>
 	</bean>
+	<bean id="statusCodeAuthenticationFilter" class="com.maty.j2ee.web.filter.HTTPStatusCodeAuthenticationFilter">
+	</bean>
+	
 	<bean id="captchaFormAuthenticationFilter" class="com.maty.j2ee.shiro.CaptchaFormAuthenticationFilter"></bean>
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -29,6 +32,7 @@
 		<property name="filters">
             <map>
                  <entry key="authc" value-ref="captchaFormAuthenticationFilter"/>
+                 <entry key="status" value-ref="statusCodeAuthenticationFilter"/>
             </map>
         </property>
 		<property name="filterChainDefinitions">
@@ -38,10 +42,11 @@
 				/captcha.jpg = anon
 				/resources/** = anon
 				/admin/** = roles[admin]
-				/** = user
+				/** = status
 			</value>
 		</property>
 	</bean>
+	
 	
 	<!-- 用户授权信息Cache, 采用EhCache -->
 	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
