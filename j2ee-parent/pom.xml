@@ -43,7 +43,7 @@
 		<mysql.version>5.1.21</mysql.version>
 		<druid.version>0.2.9</druid.version>
 
-		<!-- Plugin的属性定义 -->
+		<!-- Plugin的属性定�-->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.6</jdk.version>
 	</properties>
@@ -63,7 +63,7 @@
 		</repository>
 	</repositories>
 
-	<!-- 预定义依赖项的version,scope与exclusions,子项目中只需定义groupId 和 artifactId 即可 -->
+	<!-- 预定义依赖项的version,scope与exclusions,子项目中只需定义groupId �artifactId 即可 -->
 	<dependencyManagement>
 
 		<dependencies>
@@ -80,7 +80,7 @@
 			</dependency>
 			<!-- SPRINGSIDE MODULES end -->
 
-			<!-- SPRING basic begin(一般不需要显式定义) -->
+			<!-- SPRING basic begin(一般不需要显式定� -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
@@ -422,7 +422,7 @@
 				</exclusions>
 			</dependency>
 
-			<!-- 重新定义Java XPath Engine到最新版，避免旧版那些不必要的依赖 -->
+			<!-- 重新定义Java XPath Engine到最新版，避免旧版那些不必要的依�-->
 			<dependency>
 				<groupId>jaxen</groupId>
 				<artifactId>jaxen</artifactId>
@@ -757,7 +757,7 @@
 					</executions>
 				</plugin>
 
-				<!-- cobertura 测试覆盖率统计插件 -->
+				<!-- cobertura 测试覆盖率统计插�-->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>cobertura-maven-plugin</artifactId>
@@ -807,7 +807,7 @@
 					<version>2.4</version>
 				</plugin>
 
-				<!-- enforcer插件, 避免被依赖的依赖引入过期的jar包 -->
+				<!-- enforcer插件, 避免被依赖的依赖引入过期的jar�-->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
