@@ -22,17 +22,30 @@
 body {
 	font-family: tahoma, arial, verdana, sans-serif;
 	font-size: 12px;
+	background-color:#EAEAEA;
+	background-image: url("${ctx}/resources/images/login/loginBG.jpg");
 }
+/* .x-window-header-default-top {
+background-color: transparent;
+    border-radius: 5px 5px 0 0;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    padding: 4px 5px 0;
+}
+.x-window-header-default-top {
+    box-shadow: 0 1px 0 0 transparent inset, -1px 0 0 0 transparent inset, 1px 0 0 0 transparent inset;
+} */
 </style>
 </head>
 
 <body>
-	<div align="right" style="margin-right: 20px;height: 14px;">
+ <div id="logo"> <img src="${ctx}/resources/images/login/logo.jpg"/> </div>
+	<%-- <div align="right" style="margin-right: 20px;height: 14px;">
 		<a href="?locale=zh_CN">中文</a>
 		<a href="?locale=en_US">English</a>
 		<a href="?locale=de_DE">Deutsch</a>
-		<%-- <img src="${ctx }/captcha.jpg" alt="abc" width="200" height="50"/> --%>
-	</div>
+		<img src="${ctx }/captcha.jpg" alt="abc" width="200" height="50"/>
+	</div> --%>
 
 	<div id="loading">
 		<div class="progress progress-striped active">

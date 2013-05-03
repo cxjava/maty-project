@@ -10,7 +10,7 @@
 <link rel="shortcut icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 <link rel="icon" href="${ctx }/resources/images/favicon.ico" type="image/x-icon">
 <link href="${ctx}/resources/css/progress.css" rel="stylesheet" type="text/css" />
-<script src="${ctx}/resources/libs/yepnope/yepnope.js" type="text/javascript"></script>
+<script src="${ctx}/resources/libs/yepnope/yepnope.min.js" type="text/javascript"></script>
 <style type="text/css">
 #loading {
 	position: absolute;
@@ -22,24 +22,43 @@
 body {
 	font-family: tahoma, arial, verdana, sans-serif;
 	font-size: 12px;
+	background-color:#EAEAEA;
+	/* background-image: url("${ctx}/resources/images/login/loginBG.jpg"); */
 }
 </style>
 </head>
 
 <body>
-<a href="${ctx }/logout">logout</a>
-	<h1>What is it?</h1>
-	<p style="padding: 15px;">各式主流的、实用的、好玩的开源项目大派对。</p>
-	
-	<h1>What is new?</h1>
-	<ul style="padding: 15px;">
-		<li>CSS 大装修完毕。</li>
-		<li>CXF的SOAP WebService 与 MyBais从Mini-Service搬了过来</li>
-		<li>Shiro的授权演示搬了过来</li>
-		<button type="submit" class="btn" id="search_btn">Search</button>
-	</ul>
+	<div id="loading">
+		<div class="progress progress-striped active">
+			<div class="bar" style="width: 30%;">
+				<div id="ext-all-css" class="bar bar-success" style="width: 15%;">ext-all.css</div>
+			</div>
+			<div class="bar" style="width: 40%;">
+				<div id="ext-all" class="bar bar-danger" style="width: 15%;">ext-all.js</div>
+			</div>
+			<div class="bar" style="width: 30%;">
+				<div id="jquery" class="bar bar-warning" style="width: 15%;">jquery.js</div>
+			</div>
+		</div>
+	</div>
 	<script type="text/javascript">
 	(function () {
+		function loadProgress(id, percent) {
+			var bar = document.getElementById(id);
+			return {
+				timeout : setInterval(function() {
+					bar.style.width = (parseFloat(bar.style.width) + percent) + '%';
+				}, 500),// 0.5s
+				obj : bar
+			};
+		};
+		ctx = '${ctx}', lang = '${language}';
+		var progressResult = {
+			'ext-all-css' : loadProgress('ext-all-css', 2),
+			'ext-all' : loadProgress('ext-all', 1.5),
+			'jquery' : loadProgress('jquery', 1)
+		};
 		yepnope({
 			load : {
 				'default-css' : '${ctx}/resources/css/default.css',
@@ -53,18 +72,25 @@ body {
 				'bundle' : '${ctx}/resources/libs/extjs-i18n/Bundle.min.js',
 				'login' : 'preload!${ctx}/resources/js/login.js'
 			},
+			callback : {
+				'ext-all-css' : function(url, result, key) {
+					clearInterval(progressResult[key].timeout);
+					progressResult[key].obj.style.width = '100%';
+				},
+				'ext-all' : function(url, result, key) {
+					clearInterval(progressResult[key].timeout);
+					progressResult[key].obj.style.width = '100%';
+				},
+				'jquery' : function(url, result, key) {
+					clearInterval(progressResult[key].timeout);
+					progressResult[key].obj.style.width = '100%';
+				}
+			},
 			complete : function() {
 				// remove load prompt
+				$('#loading').remove();
 				// execute the login.js
-				//yepnope.injectJs('${ctx}/resources/js/login.js', null, {}, 3e4);// 30s
-				$("#search_btn").click(function(){
-					$.ajax({
-						url:"${ctx}/user/alls", 
-						dataType:"json",
-						success:function(data) {
-							console.log(data);
-					}});
-				});
+				yepnope.injectJs('${ctx}/resources/js/login.js', null, {}, 3e4);// 30s
 			}
 		});
 	}());

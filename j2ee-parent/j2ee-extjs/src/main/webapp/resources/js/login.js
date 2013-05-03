@@ -4,18 +4,23 @@
 			bundle : 'messages',
 			lang : lang,
 			path : 'resources/i18n',
-			noCache : false
+			autoLoad: true,
+			noCache : true
 		}).onReady(function() {
 			// captcha's url
 			var captchaUrl = ctx + '/captcha.jpg?';
 			Ext.define('Maty.Login.Form', {
 				extend : 'Ext.form.Panel',
-				bodyPadding : 10,
+				bodyPadding : 20,
 				fieldDefaults : {
 					// labelAlign : 'right',
+					minHeight:30,
 					labelWidth : 'zh_CN' === lang.language ? 70 : 110,
 					allowBlank : false
 				},
+				frame : false,
+				plain : true,
+				style:'background-color: transparent;',
 				initComponent : function() {
 					var me = this;
 					me.username = Ext.create("Ext.form.field.Text", {
@@ -62,17 +67,24 @@
 			Ext.define('Maty.Login.Window', {
 				extend : 'Ext.window.Window',
 				// closeAction : 'hide',
-				layout : 'fit',
+//				layout : 'fit',
+				x:80,
+				style:'background-color: transparent;',
+				y:260,
+				iconCls : 'gm_logo',
+				layout: 'absolute',
 				loginUrl : ctx + '/login',
 				loginSuccessUrl : ctx + '/',
 				border : false,
+				frame : false,
 				width : 'zh_CN' === lang.language ? 250 : 300,
-				closable : true,
+				closable : false,
 				modal : false,
 				plain : true,
+				//plain:true,//true则主体背景透明，false则主体有小差别的背景色，默认为false
 				title : t('login.window.title'),
 				resizable : true,
-				categoryModel : null,
+				//categoryModel : null,
 				initComponent : function() {
 					var me = this;
 					me.form = Ext.create('Maty.Login.Form');
@@ -235,7 +247,6 @@
 			});
 
 			Ext.create("Maty.Login.Window").show();
-		});
 	});
-
+	});
 }());
