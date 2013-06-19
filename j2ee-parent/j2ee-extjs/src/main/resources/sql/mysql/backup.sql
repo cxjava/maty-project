@@ -1,3 +1,10 @@
+-- CREATE DATABASE IF NOT EXISTS seocms CHARACTER SET utf8 COLLATE utf8_general_ci;
+-- USE seocms;
+-- CREATE USER seocms@localhost IDENTIFIED BY 'seocms';
+-- GRANT ALL PRIVILEGES ON seocms.* TO seocms@localhost;
+-- USE seocms;
+
+
 -- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------

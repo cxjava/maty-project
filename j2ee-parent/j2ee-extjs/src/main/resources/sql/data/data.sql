@@ -1,3 +1,10 @@
+-- CREATE DATABASE IF NOT EXISTS seocms CHARACTER SET utf8 COLLATE utf8_general_ci;
+-- USE seocms;
+-- CREATE USER seocms@localhost IDENTIFIED BY 'seocms';
+-- GRANT ALL PRIVILEGES ON seocms.* TO seocms@localhost;
+-- USE seocms;
+
+
 
 INSERT INTO t_base_module (id,module_name,module_url,parent_id,leaf,expanded,display_index,is_display,en_module_name,icon_css,information,parent_url) VALUES (1,'系统设置',NULL,0,0,1,1,1,'System Settings','system_settings',NULL,NULL);
 INSERT INTO t_base_module (id,module_name,module_url,parent_id,leaf,expanded,display_index,is_display,en_module_name,icon_css,information,parent_url) VALUES (2,'供应商管理',NULL,0,0,1,2,1,'Operator','abc',NULL,NULL);
